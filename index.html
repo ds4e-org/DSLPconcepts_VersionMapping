@@ -1,289 +1,267 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Science Learning Progressions · Concept Mapping V1 → V2</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>DS Learning Progressions · Concept Mapping V1 → V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1c2128;
-    --border: #30363d;
-    --text: #e6edf3;
-    --text-muted: #8b949e;
-    --text-dim: #484f58;
-    --a: #58a6ff;
-    --b: #3fb950;
-    --c: #d29922;
-    --d: #f78166;
-    --e: #bc8cff;
+    --bg: #0c1015; --surface: #13181f; --surface2: #1a2130;
+    --border: #252d3a; --border2: #2e3a4a;
+    --text: #dde4ee; --muted: #7a8899; --dim: #3d4a5a;
+    --a: #4d9de0; --b: #3dba70; --c: #e8b84b; --d: #e87040; --e: #a57de8;
+    --panel-w: 340px;
   }
+  html { font-size: 13px; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  /* ── Header ── */
+  header { padding: 2rem 2.5rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .h-left h1 { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+  .h-left h1 em { font-style: italic; color: var(--muted); }
+  .h-left p { font-size: 0.78rem; color: var(--muted); max-width: 460px; line-height: 1.65; }
+  .stats { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
+  .stat { text-align: center; min-width: 60px; }
+  .stat-n { font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 600; line-height: 1; margin-bottom: 0.15rem; }
+  .stat-l { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; }
 
-  header {
-    padding: 2.2rem 3rem 1.4rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .header-left h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.35rem;
-  }
-
-  .header-left h1 em { font-style: italic; color: var(--text-muted); }
-
-  .header-left p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    max-width: 500px;
-    line-height: 1.6;
-  }
-
-  .stats-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
-
-  .stat { text-align: center; min-width: 64px; }
-  .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; line-height: 1; margin-bottom: 0.15rem; }
-  .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
-
-  .controls {
-    padding: 0.85rem 3rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    background: var(--surface);
-  }
-
-  .controls-label {
-    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--text-dim); font-weight: 600;
-  }
-
-  .filter-group { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
-  .filter-group + .filter-group { padding-left: 1.2rem; border-left: 1px solid var(--border); }
-
-  .btn {
-    padding: 0.28rem 0.7rem; border-radius: 3px; border: 1px solid var(--border);
-    background: transparent; color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif; font-size: 0.73rem; font-weight: 500;
-    cursor: pointer; transition: all 0.15s ease; letter-spacing: 0.01em;
-  }
-  .btn:hover { border-color: #555; color: var(--text); }
-  .btn.act-all  { border-color: var(--text);  color: var(--text);  background: rgba(255,255,255,0.07); }
-  .btn.act-a    { border-color: var(--a);     color: var(--a);     background: rgba(88,166,255,0.13); }
-  .btn.act-b    { border-color: var(--b);     color: var(--b);     background: rgba(63,185,80,0.13); }
-  .btn.act-c    { border-color: var(--c);     color: var(--c);     background: rgba(210,153,34,0.13); }
-  .btn.act-d    { border-color: var(--d);     color: var(--d);     background: rgba(247,129,102,0.13); }
-  .btn.act-e    { border-color: var(--e);     color: var(--e);     background: rgba(188,140,255,0.13); }
-  .btn.act-split{ border-color: #ff7b72;      color: #ff7b72;      background: rgba(255,123,114,0.13); }
-  .btn.act-merge{ border-color: #79c0ff;      color: #79c0ff;      background: rgba(121,192,255,0.13); }
-
+  /* ── Controls ── */
+  .controls { padding: 0.7rem 2.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; background: var(--surface); }
+  .ctrl-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--dim); font-weight: 600; white-space: nowrap; }
+  .fg { display: flex; gap: 0.3rem; align-items: center; }
+  .fg + .fg { padding-left: 1rem; border-left: 1px solid var(--border); }
+  .btn { padding: 0.25rem 0.65rem; border-radius: 3px; border: 1px solid var(--border2); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.14s; }
+  .btn:hover { border-color: #4a5568; color: var(--text); }
+  .btn.aa  { border-color: var(--text);  color: var(--text);  background: rgba(255,255,255,0.06); }
+  .btn.ba  { border-color: var(--a); color: var(--a); background: rgba(77,157,224,0.12); }
+  .btn.bb  { border-color: var(--b); color: var(--b); background: rgba(61,186,112,0.12); }
+  .btn.bc  { border-color: var(--c); color: var(--c); background: rgba(232,184,75,0.12); }
+  .btn.bd  { border-color: var(--d); color: var(--d); background: rgba(232,112,64,0.12); }
+  .btn.be  { border-color: var(--e); color: var(--e); background: rgba(165,125,232,0.12); }
+  .btn.bs  { border-color: #f87171; color: #f87171; background: rgba(248,113,113,0.12); }
+  .btn.bm  { border-color: #60aff5; color: #60aff5; background: rgba(96,175,245,0.12); }
   .legend { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-left: auto; }
-  .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; color: var(--text-muted); }
-  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .li { display: flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; color: var(--muted); }
+  .ld { width: 7px; height: 7px; border-radius: 50%; }
 
-  .chart-wrapper {
-    padding: 1rem 0 2rem;
-    overflow: auto;
-    max-height: calc(100vh - 200px);
-  }
-
+  /* ── Chart layout ── */
+  .page-body { display: flex; min-height: calc(100vh - 160px); }
+  .chart-wrap { flex: 1; overflow: auto; padding: 1rem 0 2rem; transition: margin-right 0.3s ease; }
+  .chart-wrap.panel-open { margin-right: var(--panel-w); }
   svg { display: block; }
 
-  .tooltip {
-    position: fixed; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 6px; padding: 0.7rem 0.9rem; font-size: 0.77rem; line-height: 1.55;
-    pointer-events: none; opacity: 0; transition: opacity 0.12s ease;
-    max-width: 290px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+  /* ── Drill-down panel ── */
+  .panel {
+    position: fixed; top: 0; right: calc(-1 * var(--panel-w)); width: var(--panel-w);
+    height: 100vh; background: var(--surface); border-left: 1px solid var(--border2);
+    z-index: 50; overflow-y: auto; transition: right 0.3s ease;
+    display: flex; flex-direction: column;
   }
-  .tooltip.show { opacity: 1; }
-  .tt-title { font-weight: 600; color: var(--text); margin-bottom: 0.25rem; font-size: 0.8rem; }
-  .tt-body  { color: var(--text-muted); }
-  .tt-tag   {
-    display: inline-block; margin-top: 0.35rem; padding: 0.1rem 0.4rem;
-    border-radius: 2px; font-size: 0.66rem; font-family: 'DM Mono', monospace;
-    font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
+  .panel.open { right: 0; }
+  .panel-header {
+    padding: 1.2rem 1.2rem 0.8rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem;
+    position: sticky; top: 0; background: var(--surface); z-index: 2;
   }
-  .tag-s { background: rgba(255,123,114,0.2); color: #ff7b72; }
-  .tag-m { background: rgba(121,192,255,0.2); color: #79c0ff; }
+  .panel-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 300; line-height: 1.3; color: var(--text); }
+  .panel-close { background: none; border: 1px solid var(--border2); color: var(--muted); cursor: pointer; width: 24px; height: 24px; border-radius: 3px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.14s; }
+  .panel-close:hover { border-color: #4a5568; color: var(--text); }
+  .panel-body { padding: 1rem 1.2rem; flex: 1; }
+
+  .p-concept { margin-bottom: 1.2rem; }
+  .p-concept-code { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; margin-bottom: 0.25rem; }
+  .p-concept-name { font-size: 0.85rem; font-weight: 500; color: var(--text); line-height: 1.35; margin-bottom: 0.4rem; }
+  .p-comp-total { font-size: 0.72rem; color: var(--muted); }
+  .p-comp-total strong { color: var(--text); }
+
+  /* Grade band mini bars */
+  .grade-bars { display: flex; gap: 3px; margin-top: 0.45rem; align-items: flex-end; height: 28px; }
+  .gb-col { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+  .gb-bar { width: 100%; border-radius: 1px; min-height: 2px; transition: opacity 0.2s; }
+  .gb-label { font-size: 0.56rem; color: var(--dim); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+  .p-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+  .p-section-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 600; margin-bottom: 0.6rem; }
+
+  .p-flow { margin-bottom: 0.7rem; padding: 0.65rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); }
+  .p-flow-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; gap: 0.5rem; }
+  .p-flow-code { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; }
+  .p-flow-badge { font-size: 0.62rem; font-family: 'DM Mono', monospace; padding: 0.1rem 0.35rem; border-radius: 2px; white-space: nowrap; }
+  .badge-comp { background: rgba(255,255,255,0.06); color: var(--muted); }
+  .p-flow-name { font-size: 0.78rem; color: var(--text); line-height: 1.35; margin-bottom: 0.3rem; }
+  .p-flow-rationale { font-size: 0.72rem; color: var(--muted); line-height: 1.55; font-style: italic; }
+
+  .p-note { font-size: 0.68rem; color: var(--dim); line-height: 1.55; border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: 0.5rem; }
+
+  /* ── Tooltip ── */
+  .tt { position: fixed; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 0.6rem 0.85rem; font-size: 0.75rem; line-height: 1.5; pointer-events: none; opacity: 0; transition: opacity 0.1s; max-width: 270px; z-index: 100; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+  .tt.show { opacity: 1; }
+  .tt-t { font-weight: 600; color: var(--text); font-size: 0.78rem; margin-bottom: 0.2rem; }
+  .tt-b { color: var(--muted); }
+  .tt-tag { display: inline-block; margin-top: 0.3rem; padding: 0.08rem 0.35rem; border-radius: 2px; font-size: 0.63rem; font-family: 'DM Mono', monospace; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .ts { background: rgba(248,113,113,0.18); color: #f87171; }
+  .tm { background: rgba(96,175,245,0.18); color: #60aff5; }
+
+  /* click-highlight pulse */
+  @keyframes clickPulse { 0%{opacity:1} 50%{opacity:0.4} 100%{opacity:1} }
+  .clicked { animation: clickPulse 0.3s ease; }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-left">
-    <h1>Concept Mapping <em>V1 → V2</em></h1>
-    <p>How 83 Version 1 concepts consolidated into 38 Version 2 concepts.
-       Hover any bar or band to inspect a mapping. Filter by strand or pattern below.</p>
+  <div class="h-left">
+    <h1>Concept Mapping <em>Version 1 → Version 2</em></h1>
+    <p>Band thickness reflects competency count flowing through each connection.
+       Click any bar or band to open the detail panel.
+       Hover to preview. Filter by strand or pattern.</p>
   </div>
-  <div class="stats-row">
-    <div class="stat">
-      <div class="stat-num" style="color:var(--text-muted)">83</div>
-      <div class="stat-label">V1 Concepts</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:var(--text-muted)">→</div>
-      <div class="stat-label">&nbsp;</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:var(--text-muted)">38</div>
-      <div class="stat-label">V2 Concepts</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:#ff7b72">45</div>
-      <div class="stat-label">Splits</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" style="color:#79c0ff">38</div>
-      <div class="stat-label">V2 receiving merges</div>
-    </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" style="color:var(--muted)">83</div><div class="stat-l">V1 Concepts</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--muted)">→</div><div class="stat-l">&nbsp;</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--muted)">38</div><div class="stat-l">V2 Concepts</div></div>
+    <div class="stat"><div class="stat-n" style="color:#f87171">45</div><div class="stat-l">Splits</div></div>
+    <div class="stat"><div class="stat-n" style="color:#60aff5">~699</div><div class="stat-l">Competencies</div></div>
   </div>
 </header>
 
 <div class="controls">
-  <span class="controls-label">Strand</span>
-  <div class="filter-group">
-    <button class="btn act-all" data-f="all">All</button>
+  <span class="ctrl-lbl">Strand</span>
+  <div class="fg">
+    <button class="btn aa" data-f="all">All</button>
     <button class="btn" data-f="A" data-c="a">A · Foundations</button>
     <button class="btn" data-f="B" data-c="b">B · Creation</button>
     <button class="btn" data-f="C" data-c="c">C · Exploration</button>
     <button class="btn" data-f="D" data-c="d">D · Models</button>
     <button class="btn" data-f="E" data-c="e">E · Communication</button>
   </div>
-  <div class="filter-group">
-    <span class="controls-label">Pattern</span>
-    <button class="btn" data-f="splits">⚠ Splits only</button>
-    <button class="btn" data-f="merges">Merges only</button>
+  <div class="fg">
+    <span class="ctrl-lbl">Pattern</span>
+    <button class="btn" data-f="splits">⚠ Splits</button>
+    <button class="btn" data-f="merges">Merges</button>
   </div>
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--a)"></div>Strand A</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--b)"></div>Strand B</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c)"></div>Strand C</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--d)"></div>Strand D</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--e)"></div>Strand E</div>
+    <div class="li"><div class="ld" style="background:var(--a)"></div>A</div>
+    <div class="li"><div class="ld" style="background:var(--b)"></div>B</div>
+    <div class="li"><div class="ld" style="background:var(--c)"></div>C</div>
+    <div class="li"><div class="ld" style="background:var(--d)"></div>D</div>
+    <div class="li"><div class="ld" style="background:var(--e)"></div>E</div>
+    <div class="li" style="margin-left:0.5rem">
+      <div style="width:20px;height:4px;background:rgba(255,255,255,0.3);border-radius:1px"></div>
+      band width = competency count
+    </div>
   </div>
 </div>
 
-<div class="chart-wrapper">
-  <div id="chart"></div>
+<div class="page-body">
+  <div class="chart-wrap" id="chartWrap"><div id="chart"></div></div>
+  <div class="panel" id="panel">
+    <div class="panel-header">
+      <div class="panel-title" id="panelTitle">Select a concept or band</div>
+      <button class="panel-close" id="panelClose">✕</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
 </div>
 
-<div class="tooltip" id="tt"></div>
+<div class="tt" id="tt"></div>
 
 <script>
-// ─── Palette ──────────────────────────────────────────────────────
-const SC = { A:'#58a6ff', B:'#3fb950', C:'#d29922', D:'#f78166', E:'#bc8cff' };
+const SC = { A:'#4d9de0', B:'#3dba70', C:'#e8b84b', D:'#e87040', E:'#a57de8' };
+const GB_LABELS = ['K–2','3–5','6–8','9–10','11–12'];
 
-// ─── V1 nodes ─────────────────────────────────────────────────────
+// ─── V1 nodes ──────────────────────────────────────────────────────
 const V1 = [
-  {id:'A11',code:'A.1.1',name:'Data Types and Forms',strand:'A'},
-  {id:'A12',code:'A.1.2',name:'Data are Produced by People',strand:'A'},
-  {id:'A13',code:'A.1.3',name:'Variability of Data',strand:'A'},
-  {id:'A14',code:'A.1.4',name:'Data Provides Partial Information',strand:'A'},
-  {id:'A15',code:'A.1.5',name:'Data and AI',strand:'A'},
-  {id:'A21',code:'A.2.1',name:'Data Use Risks and Benefits',strand:'A'},
-  {id:'A22',code:'A.2.2',name:'Biases in Data',strand:'A'},
-  {id:'A23',code:'A.2.3',name:'Power of Data',strand:'A'},
-  {id:'A31',code:'A.3.1',name:'The Investigative Process',strand:'A'},
-  {id:'A32',code:'A.3.2',name:'Iteration',strand:'A'},
-  {id:'A33',code:'A.3.3',name:'Dynamic Inferences',strand:'A'},
-  {id:'A34',code:'A.3.4',name:'Apply Context',strand:'A'},
-  {id:'A35',code:'A.3.5',name:'Student Data Agency',strand:'A'},
-  {id:'B11',code:'B.1.1',name:'Data Cleaning',strand:'B'},
-  {id:'B12',code:'B.1.2',name:'Organizing and Structure',strand:'B'},
-  {id:'B13',code:'B.1.3',name:'Processing and Transformation',strand:'B'},
-  {id:'B14',code:'B.1.4',name:'Summarizing Groups',strand:'B'},
-  {id:'B21',code:'B.2.1',name:'Designing Data-Based Investigations',strand:'B'},
-  {id:'B22',code:'B.2.2',name:'Data Creation Techniques',strand:'B'},
-  {id:'B23',code:'B.2.3',name:'Designing Data Collection Plans',strand:'B'},
-  {id:'B24',code:'B.2.4',name:'Finding Secondary Data',strand:'B'},
-  {id:'B31',code:'B.3.1',name:'Creating Your Own Data',strand:'B'},
-  {id:'B32',code:'B.3.2',name:'Working with Data Created by Others',strand:'B'},
-  {id:'B33',code:'B.3.3',name:'Ethics of Data Collection and Use',strand:'B'},
-  {id:'B41',code:'B.4.1',name:'Cleanliness',strand:'B'},
-  {id:'B42',code:'B.4.2',name:'Complexity of Variables',strand:'B'},
-  {id:'B43',code:'B.4.3',name:'Size',strand:'B'},
-  {id:'B44',code:'B.4.4',name:'Complexity of Structure',strand:'B'},
-  {id:'C11',code:'C.1.1',name:'Measures of Center',strand:'C'},
-  {id:'C12',code:'C.1.2',name:'Measures of Spread',strand:'C'},
-  {id:'C13',code:'C.1.3',name:'Shape',strand:'C'},
-  {id:'C14',code:'C.1.4',name:'Frequency Tables',strand:'C'},
-  {id:'C15',code:'C.1.5',name:'Missingness',strand:'C'},
-  {id:'C16',code:'C.1.6',name:'Metadata',strand:'C'},
-  {id:'C21',code:'C.2.1',name:'Comparing Variables',strand:'C'},
-  {id:'C22',code:'C.2.2',name:'Understanding Distributions',strand:'C'},
-  {id:'C23',code:'C.2.3',name:'Defining Relationships',strand:'C'},
-  {id:'C24',code:'C.2.4',name:'Analyzing Non-Traditional Data',strand:'C'},
-  {id:'C25',code:'C.2.5',name:'Machine Learning',strand:'C'},
-  {id:'C31',code:'C.3.1',name:'Describing Variability',strand:'C'},
-  {id:'C32',code:'C.3.2',name:'Comparing Variability',strand:'C'},
-  {id:'C33',code:'C.3.3',name:'Sources of Variability',strand:'C'},
-  {id:'C34',code:'C.3.4',name:'Variability in Computational Tools',strand:'C'},
-  {id:'C41',code:'C.4.1',name:'Tool Application',strand:'C'},
-  {id:'C42',code:'C.4.2',name:'Tool Ethics',strand:'C'},
-  {id:'C43',code:'C.4.3',name:'Tool Evaluation',strand:'C'},
-  {id:'C44',code:'C.4.4',name:'Tool Selection',strand:'C'},
-  {id:'C45',code:'C.4.5',name:'The Role of Code',strand:'C'},
-  {id:'C46',code:'C.4.6',name:'Tool Accessibility',strand:'C'},
-  {id:'C51',code:'C.5.1',name:'Understanding Modeling',strand:'C'},
-  {id:'C52',code:'C.5.2',name:'Creating Models',strand:'C'},
-  {id:'D11',code:'D.1.1',name:'Probabilistic Language',strand:'D'},
-  {id:'D12',code:'D.1.2',name:'Priors and Updates',strand:'D'},
-  {id:'D13',code:'D.1.3',name:'Expected Value',strand:'D'},
-  {id:'D14',code:'D.1.4',name:'Explaining Significance',strand:'D'},
-  {id:'D15',code:'D.1.5',name:'Sampling and Simulations',strand:'D'},
-  {id:'D16',code:'D.1.6',name:'Correlation vs. Causation',strand:'D'},
-  {id:'D17',code:'D.1.7',name:'Randomization',strand:'D'},
-  {id:'D18',code:'D.1.8',name:'Multi-Variable Decision Making',strand:'D'},
-  {id:'D21',code:'D.2.1',name:'Verifiable Questions & Statements',strand:'D'},
-  {id:'D22',code:'D.2.2',name:'Iteration, Validation & Explanations',strand:'D'},
-  {id:'D23',code:'D.2.3',name:'Uncertainty Statements & Limitations',strand:'D'},
-  {id:'D24',code:'D.2.4',name:'Relevant Conclusions',strand:'D'},
-  {id:'D31',code:'D.3.1',name:'Application Fitness',strand:'D'},
-  {id:'D32',code:'D.3.2',name:'Sample vs. Population',strand:'D'},
-  {id:'D33',code:'D.3.3',name:'Sample Size',strand:'D'},
-  {id:'D34',code:'D.3.4',name:'Sample Bias',strand:'D'},
-  {id:'D35',code:'D.3.5',name:'Extension Statements',strand:'D'},
-  {id:'D36',code:'D.3.6',name:"Subset Effects / Simpson's Paradox",strand:'D'},
-  {id:'D37',code:'D.3.7',name:'Meta-Analysis and Facts',strand:'D'},
-  {id:'E11',code:'E.1.1',name:'Sense-Making with Visualizations',strand:'E'},
-  {id:'E12',code:'E.1.2',name:'Investigate with Visualizations',strand:'E'},
-  {id:'E13',code:'E.1.3',name:'Clear Design for User Interpretation',strand:'E'},
-  {id:'E14',code:'E.1.4',name:'Graphical Literacy',strand:'E'},
-  {id:'E15',code:'E.1.5',name:'Representational Fluency',strand:'E'},
-  {id:'E16',code:'E.1.6',name:'Parallel Visual Type Construction',strand:'E'},
-  {id:'E21',code:'E.2.1',name:'Connect Narratives & Visualizations',strand:'E'},
-  {id:'E22',code:'E.2.2',name:'Write Data Stories',strand:'E'},
-  {id:'E23',code:'E.2.3',name:'Adapt Narratives',strand:'E'},
-  {id:'E31',code:'E.3.1',name:'Intent & Authorship of Analysis',strand:'E'},
-  {id:'E32',code:'E.3.2',name:'Advocacy with Data Arguments',strand:'E'},
-  {id:'E33',code:'E.3.3',name:'Civic Data Practices',strand:'E'},
-  {id:'E34',code:'E.3.4',name:'Impacts of Technology Use',strand:'E'},
+  {id:'A11',code:'A.1.1',name:'Data Types and Forms',strand:'A',comp:11,gb:[3,3,2,2,1]},
+  {id:'A12',code:'A.1.2',name:'Data are Produced by People',strand:'A',comp:10,gb:[1,2,3,2,2]},
+  {id:'A13',code:'A.1.3',name:'Variability of Data',strand:'A',comp:6,gb:[1,2,1,1,1]},
+  {id:'A14',code:'A.1.4',name:'Data Provides Partial Information',strand:'A',comp:6,gb:[1,1,2,1,1]},
+  {id:'A15',code:'A.1.5',name:'Data and AI',strand:'A',comp:13,gb:[2,2,2,3,4]},
+  {id:'A21',code:'A.2.1',name:'Data Use Risks and Benefits',strand:'A',comp:10,gb:[2,2,2,2,2]},
+  {id:'A22',code:'A.2.2',name:'Biases in Data',strand:'A',comp:8,gb:[1,2,1,2,2]},
+  {id:'A23',code:'A.2.3',name:'Power of Data',strand:'A',comp:7,gb:[1,1,1,1,3]},
+  {id:'A31',code:'A.3.1',name:'The Investigative Process',strand:'A',comp:6,gb:[1,1,1,1,2]},
+  {id:'A32',code:'A.3.2',name:'Iteration',strand:'A',comp:5,gb:[1,1,1,1,1]},
+  {id:'A33',code:'A.3.3',name:'Dynamic Inferences',strand:'A',comp:5,gb:[1,1,1,1,1]},
+  {id:'A34',code:'A.3.4',name:'Apply Context',strand:'A',comp:7,gb:[1,1,1,2,2]},
+  {id:'A35',code:'A.3.5',name:'Student Data Agency',strand:'A',comp:8,gb:[2,1,2,1,2]},
+  {id:'B11',code:'B.1.1',name:'Data Cleaning',strand:'B',comp:9,gb:[2,2,1,2,2]},
+  {id:'B12',code:'B.1.2',name:'Organizing and Structure',strand:'B',comp:12,gb:[3,1,2,3,3]},
+  {id:'B13',code:'B.1.3',name:'Processing and Transformation',strand:'B',comp:9,gb:[2,1,2,2,2]},
+  {id:'B14',code:'B.1.4',name:'Summarizing Groups',strand:'B',comp:6,gb:[1,2,1,1,1]},
+  {id:'B21',code:'B.2.1',name:'Designing Data-Based Investigations',strand:'B',comp:9,gb:[1,2,1,2,3]},
+  {id:'B22',code:'B.2.2',name:'Data Creation Techniques',strand:'B',comp:14,gb:[1,3,2,5,3]},
+  {id:'B23',code:'B.2.3',name:'Designing Data Collection Plans',strand:'B',comp:5,gb:[1,1,1,1,1]},
+  {id:'B24',code:'B.2.4',name:'Finding Secondary Data',strand:'B',comp:14,gb:[2,2,3,3,4]},
+  {id:'B31',code:'B.3.1',name:'Creating Your Own Data',strand:'B',comp:12,gb:[3,4,3,1,1]},
+  {id:'B32',code:'B.3.2',name:'Working with Data Created by Others',strand:'B',comp:10,gb:[1,1,3,2,3]},
+  {id:'B33',code:'B.3.3',name:'Ethics of Data Collection and Use',strand:'B',comp:10,gb:[2,2,2,2,2]},
+  {id:'B41',code:'B.4.1',name:'Cleanliness',strand:'B',comp:10,gb:[1,2,2,2,3]},
+  {id:'B42',code:'B.4.2',name:'Complexity of Variables',strand:'B',comp:12,gb:[1,2,3,3,3]},
+  {id:'B43',code:'B.4.3',name:'Size',strand:'B',comp:9,gb:[1,2,2,2,2]},
+  {id:'B44',code:'B.4.4',name:'Complexity of Structure',strand:'B',comp:14,gb:[2,3,3,2,4]},
+  {id:'C11',code:'C.1.1',name:'Measures of Center',strand:'C',comp:8,gb:[2,1,2,1,2]},
+  {id:'C12',code:'C.1.2',name:'Measures of Spread',strand:'C',comp:6,gb:[1,1,1,2,1]},
+  {id:'C13',code:'C.1.3',name:'Shape',strand:'C',comp:6,gb:[1,1,1,2,1]},
+  {id:'C14',code:'C.1.4',name:'Frequency Tables',strand:'C',comp:5,gb:[1,1,1,1,1]},
+  {id:'C15',code:'C.1.5',name:'Missingness',strand:'C',comp:6,gb:[1,1,1,2,1]},
+  {id:'C16',code:'C.1.6',name:'Metadata',strand:'C',comp:5,gb:[1,1,1,1,1]},
+  {id:'C21',code:'C.2.1',name:'Comparing Variables',strand:'C',comp:5,gb:[1,1,1,1,1]},
+  {id:'C22',code:'C.2.2',name:'Understanding Distributions',strand:'C',comp:9,gb:[2,2,1,2,2]},
+  {id:'C23',code:'C.2.3',name:'Defining Relationships',strand:'C',comp:11,gb:[2,3,2,2,2]},
+  {id:'C24',code:'C.2.4',name:'Analyzing Non-Traditional Data',strand:'C',comp:10,gb:[3,2,2,2,1]},
+  {id:'C25',code:'C.2.5',name:'Machine Learning',strand:'C',comp:4,gb:[0,1,1,1,1]},
+  {id:'C31',code:'C.3.1',name:'Describing Variability',strand:'C',comp:8,gb:[1,2,3,1,1]},
+  {id:'C32',code:'C.3.2',name:'Comparing Variability',strand:'C',comp:5,gb:[1,1,1,1,1]},
+  {id:'C33',code:'C.3.3',name:'Sources of Variability',strand:'C',comp:11,gb:[0,2,2,4,3]},
+  {id:'C34',code:'C.3.4',name:'Variability in Computational Tools',strand:'C',comp:4,gb:[0,0,2,1,1]},
+  {id:'C41',code:'C.4.1',name:'Tool Application',strand:'C',comp:9,gb:[0,1,3,3,2]},
+  {id:'C42',code:'C.4.2',name:'Tool Ethics',strand:'C',comp:3,gb:[0,0,1,1,1]},
+  {id:'C43',code:'C.4.3',name:'Tool Evaluation',strand:'C',comp:2,gb:[0,0,0,1,1]},
+  {id:'C44',code:'C.4.4',name:'Tool Selection',strand:'C',comp:5,gb:[0,1,0,1,3]},
+  {id:'C45',code:'C.4.5',name:'The Role of Code',strand:'C',comp:6,gb:[0,0,2,2,2]},
+  {id:'C46',code:'C.4.6',name:'Tool Accessibility',strand:'C',comp:9,gb:[1,1,3,2,2]},
+  {id:'C51',code:'C.5.1',name:'Understanding Modeling',strand:'C',comp:14,gb:[3,3,3,2,3]},
+  {id:'C52',code:'C.5.2',name:'Creating Models',strand:'C',comp:14,gb:[3,2,3,3,3]},
+  {id:'D11',code:'D.1.1',name:'Probabilistic Language',strand:'D',comp:5,gb:[1,1,1,1,1]},
+  {id:'D12',code:'D.1.2',name:'Priors and Updates',strand:'D',comp:9,gb:[1,1,2,2,3]},
+  {id:'D13',code:'D.1.3',name:'Expected Value',strand:'D',comp:6,gb:[0,1,1,2,2]},
+  {id:'D14',code:'D.1.4',name:'Explaining Significance',strand:'D',comp:11,gb:[0,1,3,3,4]},
+  {id:'D15',code:'D.1.5',name:'Sampling and Simulations',strand:'D',comp:14,gb:[2,2,4,3,3]},
+  {id:'D16',code:'D.1.6',name:'Correlation vs. Causation',strand:'D',comp:8,gb:[0,2,2,2,2]},
+  {id:'D17',code:'D.1.7',name:'Randomization',strand:'D',comp:5,gb:[0,1,1,1,2]},
+  {id:'D18',code:'D.1.8',name:'Multi-Variable Decision Making',strand:'D',comp:10,gb:[0,1,3,2,4]},
+  {id:'D21',code:'D.2.1',name:'Verifiable Questions & Statements',strand:'D',comp:11,gb:[1,2,2,3,3]},
+  {id:'D22',code:'D.2.2',name:'Iteration, Validation & Explanations',strand:'D',comp:9,gb:[1,2,2,2,2]},
+  {id:'D23',code:'D.2.3',name:'Uncertainty Statements & Limitations',strand:'D',comp:4,gb:[0,1,1,1,1]},
+  {id:'D24',code:'D.2.4',name:'Relevant Conclusions',strand:'D',comp:8,gb:[1,2,2,2,1]},
+  {id:'D31',code:'D.3.1',name:'Application Fitness',strand:'D',comp:9,gb:[1,1,2,2,3]},
+  {id:'D32',code:'D.3.2',name:'Sample vs. Population',strand:'D',comp:6,gb:[0,1,2,1,2]},
+  {id:'D33',code:'D.3.3',name:'Sample Size',strand:'D',comp:8,gb:[0,1,2,3,2]},
+  {id:'D34',code:'D.3.4',name:'Sample Bias',strand:'D',comp:4,gb:[0,0,1,2,1]},
+  {id:'D35',code:'D.3.5',name:'Extension Statements',strand:'D',comp:5,gb:[0,0,1,2,2]},
+  {id:'D36',code:'D.3.6',name:"Subset Effects / Simpson's Paradox",strand:'D',comp:5,gb:[0,0,1,2,2]},
+  {id:'D37',code:'D.3.7',name:'Meta-Analysis and Facts',strand:'D',comp:6,gb:[0,1,1,2,2]},
+  {id:'E11',code:'E.1.1',name:'Sense-Making with Visualizations',strand:'E',comp:11,gb:[2,2,3,2,2]},
+  {id:'E12',code:'E.1.2',name:'Investigate with Visualizations',strand:'E',comp:10,gb:[1,2,3,2,2]},
+  {id:'E13',code:'E.1.3',name:'Clear Design for User Interpretation',strand:'E',comp:11,gb:[1,2,2,3,3]},
+  {id:'E14',code:'E.1.4',name:'Graphical Literacy',strand:'E',comp:12,gb:[2,3,3,2,2]},
+  {id:'E15',code:'E.1.5',name:'Representational Fluency',strand:'E',comp:9,gb:[2,1,2,2,2]},
+  {id:'E16',code:'E.1.6',name:'Parallel Visual Type Construction',strand:'E',comp:6,gb:[1,1,1,1,2]},
+  {id:'E21',code:'E.2.1',name:'Connect Narratives & Visualizations',strand:'E',comp:8,gb:[2,2,2,1,1]},
+  {id:'E22',code:'E.2.2',name:'Write Data Stories',strand:'E',comp:16,gb:[2,3,3,3,5]},
+  {id:'E23',code:'E.2.3',name:'Adapt Narratives',strand:'E',comp:9,gb:[1,2,2,2,2]},
+  {id:'E31',code:'E.3.1',name:'Intent & Authorship of Analysis',strand:'E',comp:13,gb:[1,2,3,4,3]},
+  {id:'E32',code:'E.3.2',name:'Advocacy with Data Arguments',strand:'E',comp:9,gb:[1,2,2,2,2]},
+  {id:'E33',code:'E.3.3',name:'Civic Data Practices',strand:'E',comp:4,gb:[0,0,0,2,2]},
+  {id:'E34',code:'E.3.4',name:'Impacts of Technology Use',strand:'E',comp:6,gb:[1,1,1,2,1]},
 ];
 
-// ─── V2 nodes ─────────────────────────────────────────────────────
+// ─── V2 nodes ──────────────────────────────────────────────────────
 const V2 = [
   {id:'2A11',code:'A.1.1',name:'Understanding Variation Through Data Investigation',strand:'A'},
   {id:'2A12',code:'A.1.2',name:'Recognizing Data in All of its Forms',strand:'A'},
@@ -324,151 +302,198 @@ const V2 = [
   {id:'2E23',code:'E.2.3',name:'Recognizing Misleading Communication',strand:'E'},
 ];
 
-// ─── Links: [v1_id, v2_id] ─────────────────────────────────────────
-const LINKS = [
-  ['A11','2A12'],['A11','2A11'],
-  ['A12','2B11'],
-  ['A13','2A11'],
-  ['A14','2D11'],
-  ['A15','2D12'],
-  ['A21','2A15'],
-  ['A22','2A15'],['A22','2B22'],['A22','2B12'],
-  ['A23','2A15'],['A23','2A13'],
-  ['A31','2A11'],['A31','2A14'],
-  ['A32','2A14'],
-  ['A33','2A14'],['A33','2A11'],
-  ['A34','2C32'],['A34','2C33'],
-  ['A35','2A13'],
-  ['B11','2B32'],
-  ['B12','2B31'],
-  ['B13','2B33'],
-  ['B14','2B33'],['B14','2C33'],
-  ['B21','2A21'],
-  ['B22','2B11'],
-  ['B23','2B12'],
-  ['B24','2A22'],
-  ['B31','2B11'],
-  ['B32','2B11'],['B32','2A22'],
-  ['B33','2B22'],
-  ['B41','2B32'],
-  ['B42','2B31'],['B42','2B33'],
-  ['B43','2B31'],
-  ['B44','2B31'],['B44','2B33'],
-  ['C11','2C11'],
-  ['C12','2C11'],
-  ['C13','2C11'],
-  ['C14','2C11'],
-  ['C15','2B32'],
-  ['C16','2B31'],
-  ['C21','2C33'],
-  ['C22','2C11'],['C22','2C33'],
-  ['C23','2C21'],['C23','2D32'],
-  ['C24','2A12'],['C24','2C21'],
-  ['C25','2D12'],['C25','2D21'],['C25','2D22'],
-  ['C31','2C11'],['C31','2A11'],
-  ['C32','2C33'],['C32','2C11'],
-  ['C33','2A11'],['C33','2D41'],
-  ['C34','2D12'],['C34','2B22'],
-  ['C41','2C31'],
-  ['C42','2B22'],['C42','2A15'],
-  ['C43','2C31'],
-  ['C44','2C31'],
-  ['C45','2C31'],['C45','2E22'],
-  ['C46','2C31'],
-  ['C51','2D11'],['C51','2D32'],
-  ['C52','2D21'],['C52','2D22'],
-  ['D11','2D13'],
-  ['D12','2D13'],
-  ['D13','2D33'],
-  ['D14','2E12'],
-  ['D15','2D23'],['D15','2D42'],
-  ['D16','2D32'],
-  ['D17','2B21'],['D17','2D32'],
-  ['D18','2D21'],['D18','2D33'],
-  ['D21','2A21'],
-  ['D22','2A14'],['D22','2D43'],
-  ['D23','2E12'],['D23','2D42'],
-  ['D24','2E11'],
-  ['D31','2D42'],
-  ['D32','2D42'],['D32','2D23'],
-  ['D33','2B12'],['D33','2D23'],
-  ['D34','2B12'],['D34','2B22'],
-  ['D35','2D42'],
-  ['D36','2C33'],['D36','2D42'],
-  ['D37','2D43'],['D37','2E22'],
-  ['E11','2C21'],['E11','2E13'],
-  ['E12','2E13'],['E12','2C11'],
-  ['E13','2C21'],['E13','2E13'],
-  ['E14','2C21'],
-  ['E15','2C21'],['E15','2E23'],
-  ['E16','2C21'],
-  ['E21','2E21'],
-  ['E22','2E21'],
-  ['E23','2E21'],
-  ['E31','2E23'],['E31','2E21'],
-  ['E32','2A15'],['E32','2E21'],
-  ['E33','2A13'],['E33','2A15'],
-  ['E34','2B22'],['E34','2A15'],
+// ─── Links: [v1id, v2id, competencyCount, rationale] ──────────────
+const RAW_LINKS = [
+  ['A11','2A12',6,'Non-traditional data types and forms (photos, text, audio) consolidate here; the data-type taxonomy is the core of this V2 concept.'],
+  ['A11','2A11',5,'The variability framing of data types — that different forms capture different aspects of variation — connects to the foundational variation concept.'],
+  ['A12','2B11',10,'Human decision-making in measurement (who measures, what tools, what purpose) is now the definitional core of the Measurements concept.'],
+  ['A13','2A11',6,'Variability of data is the direct conceptual parent of Understanding Variation; this is essentially a rename and expansion.'],
+  ['A14','2D11',6,'Data incompleteness ("all models are wrong") is now framed under Models as Approximations, giving it a modeling-theory home.'],
+  ['A15','2D12',13,'AI-as-function-machine framing (inputs, outputs, weights) is now the structural definition of Models as Mathematical Relationships.'],
+  ['A21','2A15',10,'Risks and benefits of data use are consolidated into the power and responsibility framing — the most direct home for this content.'],
+  ['A22','2A15',3,'Bias awareness as a dimension of responsible data use consolidates into the power/responsibility concept.'],
+  ['A22','2B22',3,'Harmful bias practices in data collection are ethical dimensions addressed in Ethics in Data Collection.'],
+  ['A22','2B12',2,'Sampling design as a mechanism for mitigating collection bias now lives in the sampling procedures concept.'],
+  ['A23','2A15',4,'Data as an instrument of advocacy and discovery is the defining argument of Power and Responsibility.'],
+  ['A23','2A13',3,"The questioning disposition is itself an expression of engaging with data's power — civic curiosity."],
+  ['A31','2A11',3,'The investigative process generates understanding of variation; both concepts describe how people engage with data to make sense of the world.'],
+  ['A31','2A14',3,'The iterative, cyclical nature of investigation is the structural heart of Embracing Iteration.'],
+  ['A32','2A14',5,'Iteration is renamed and expanded here; content maps directly.'],
+  ['A33','2A14',3,'Dynamic inferences evolve through the iterative process — new data prompts revision, which is iteration in action.'],
+  ['A33','2A11',2,'Updating understanding as evidence accumulates is how variation understanding develops.'],
+  ['A34','2C32',4,'Context-sensitive interpretation of single-variable findings is central to Investigating Questions about Single Variables.'],
+  ['A34','2C33',3,'Context-sensitive interpretation across multiple variables lives in the multi-variable investigation concept.'],
+  ['A35','2A13',8,'Student data agency is fully expressed through the questioning disposition — curiosity, autonomy, and personal inquiry.'],
+  ['B11','2B32',9,'Data Cleaning content maps directly to the renamed and reorganized Data Cleaning concept.'],
+  ['B12','2B31',12,'Organizing and Structure is now Organizing Data — direct content match.'],
+  ['B13','2B33',9,'Processing and Transformation maps directly to Processing Data.'],
+  ['B14','2B33',3,'Summarizing groups is a processing operation — creating aggregate variables from raw data.'],
+  ['B14','2C33',3,'Group-level summaries feed directly into investigating multi-variable questions.'],
+  ['B21','2A21',9,'Designing data-based investigations is the procedural side of Formulating Investigatable Questions.'],
+  ['B22','2B11',14,'Simulation and sensor-based data generation is a form of measurement — now consolidated under Measurements.'],
+  ['B23','2B12',5,'Collection planning is central to designing sound sampling procedures.'],
+  ['B24','2A22',14,'Finding and evaluating existing datasets is exactly what Identifying Questions from Data addresses.'],
+  ['B31','2B11',12,'Creating your own data (original data collection) is a form of measurement — the primary home in V2.'],
+  ['B32','2B11',5,'Evaluating others\' collection methods requires understanding measurement decisions.'],
+  ['B32','2A22',5,'Assessing existing datasets for relevance to a question lives in Identifying Questions from Data.'],
+  ['B33','2B22',10,'Ethics in data collection maps directly here — clearest content match.'],
+  ['B41','2B32',10,'Dataset cleanliness levels and quality issues map directly to Data Cleaning.'],
+  ['B42','2B31',6,'Variable type complexity informs how data should be organized and structured.'],
+  ['B42','2B33',6,'Variable transformation (e.g., binning, recoding) is a processing task.'],
+  ['B43','2B31',9,'Dataset size considerations affect organizational choices.'],
+  ['B44','2B31',7,'Complex nested or hierarchical structures require advanced organizing strategies.'],
+  ['B44','2B33',7,'Structural transformation (wide/long format, joins) is a processing operation.'],
+  ['C11','2C11',8,'Measures of center are a core component of single variable distribution description — direct match.'],
+  ['C12','2C11',6,'Measures of spread are a core component of single variable distribution description.'],
+  ['C13','2C11',6,'Shape (skewness, modes, gaps) is a core component of distribution description.'],
+  ['C14','2C11',5,'Frequency tables are the tabular tool for describing single variable distributions.'],
+  ['C15','2B32',6,'Missing data identification and handling is a data cleaning task — now consolidated there.'],
+  ['C16','2B31',5,'Metadata is part of data organization documentation — lives in Organizing Data.'],
+  ['C21','2C33',5,'Comparing variables is the defining activity of investigating multi-variable questions.'],
+  ['C22','2C11',5,'Distribution understanding provides the foundation for single variable analysis.'],
+  ['C22','2C33',4,'Distributions also enable group comparisons in multi-variable investigations.'],
+  ['C23','2C21',6,'Defining relationships between variables is the core of Describing Multivariate Relationships.'],
+  ['C23','2D32',5,'Defining relationships is a precursor to investigating causal processes.'],
+  ['C24','2A12',5,'Non-traditional data types (text, audio, sensor) are recognized in Recognizing Data in All Forms.'],
+  ['C24','2C21',5,'Visualizing and analyzing non-traditional data is a multivariate relationship activity.'],
+  ['C25','2D12',2,'ML as mathematical relationships (inputs/outputs/weights) is the definitional frame of Models as Mathematical Relationships.'],
+  ['C25','2D21',1,'Building quantitative prediction models (e.g., regression, decision trees) is covered here.'],
+  ['C25','2D22',1,'Building categorical classification models (e.g., decision trees, classifiers) is covered here.'],
+  ['C31','2C11',4,'Describing variability uses the same distributional tools as single variable description.'],
+  ['C31','2A11',4,'Understanding sources of variability is foundational to understanding variation in data.'],
+  ['C32','2C33',3,'Comparing variability across groups is a multi-variable investigation question.'],
+  ['C32','2C11',2,'Comparing variability builds on single variable distribution tools.'],
+  ['C33','2A11',6,'Understanding sources of variability is the conceptual core of the variation-understanding foundation.'],
+  ['C33','2D41',5,'Measurement error as a source of variability is now framed as a component of model error quantification.'],
+  ['C34','2D12',2,'AI output variability is understood through the mathematical model frame (inputs, outputs, weights).'],
+  ['C34','2B22',2,'Bias and ethical dimensions of AI tool variability live in Ethics in Data Collection and Use.'],
+  ['C41','2C31',9,'Tool application skills consolidate into Using Technology for Data Exploration.'],
+  ['C42','2B22',2,'Tool ethics (privacy, bias, AI limitations) are ethical dimensions of data collection and use.'],
+  ['C42','2A15',1,'Broader societal power of tools connects to Power and Responsibility of Data.'],
+  ['C43','2C31',2,'Tool evaluation is a component of technology exploration capability.'],
+  ['C44','2C31',5,'Tool selection judgment is part of using technology for exploration.'],
+  ['C45','2C31',3,'Code as automation tool for data exploration lives here.'],
+  ['C45','2E22',3,'Code enables reproducible, documented analysis — core to Creating Reproducible Documentation.'],
+  ['C46','2C31',9,'Accessibility is a dimension of inclusive technology for data exploration.'],
+  ['C51','2D11',7,'Understanding modeling as simplification ("all models are wrong") is the definition of Models as Approximations.'],
+  ['C51','2D32',7,'Understanding how models relate to causal processes connects to Investigating Processes and Causal Relationships.'],
+  ['C52','2D21',7,'Creating quantitative prediction models is the subject of Building Models for Quantitative Outcomes.'],
+  ['C52','2D22',7,'Creating categorical prediction models is the subject of Building Models for Categorical Outcomes.'],
+  ['D11','2D13',5,'Probabilistic language describes uncertainty in distributions — now framed directly through Probability Distributions as Models.'],
+  ['D12','2D13',9,'Prior/update (Bayesian) logic is probability distribution reasoning — direct conceptual match.'],
+  ['D13','2D33',6,'Expected value is a model parameter that must be interpreted in real-world context.'],
+  ['D14','2E12',11,'Communicating statistical significance is characterizing the implications of findings — lives in the communication strand.'],
+  ['D15','2D23',7,'Simulation-based inference for distinguishing findings from chance is the subject of Building Simulations for Inference.'],
+  ['D15','2D42',7,'Sampling logic informs the scope of what can be generalized — core to Evaluating Model Generalizability.'],
+  ['D16','2D32',8,'Separating correlation from causation is the central task of Investigating Processes and Causal Relationships.'],
+  ['D17','2B21',3,'Randomization as a research design principle (random assignment) is the subject of Research Design.'],
+  ['D17','2D32',2,'Randomization as the gold standard for causal evidence connects to causal investigation.'],
+  ['D18','2D21',5,'Multi-variable decision making using regression models is Building Models for Quantitative Outcomes.'],
+  ['D18','2D33',5,'Interpreting multiple regression coefficients in context is Interpreting Model Parameters.'],
+  ['D21','2A21',11,'Verifiable, hypothesis-based questions are the definitional content of Formulating Investigatable Questions.'],
+  ['D22','2A14',5,'Iteration and validation are the process components of Embracing Iteration.'],
+  ['D22','2D43',4,'Model comparison through validation is Comparing and Improving Models.'],
+  ['D23','2E12',2,'Uncertainty statements are how significance and implications are characterized in communication.'],
+  ['D23','2D42',2,'Stating limitations is a form of evaluating what the model can generalize to.'],
+  ['D24','2E11',8,'Ensuring conclusions are relevant to the original question is the subject of Identifying Evidence Based Claims.'],
+  ['D31','2D42',9,'Application fitness — whether findings generalize to new contexts — is Evaluating Model Generalizability.'],
+  ['D32','2D42',3,'Sample-population reasoning defines the scope of what a model can generalize to.'],
+  ['D32','2D23',3,'Using samples in simulations is Building Simulations for Inference.'],
+  ['D33','2B12',4,'Sample size is a key consideration in designing sound sampling procedures.'],
+  ['D33','2D23',4,'Sample size affects the reliability of simulation-based inference.'],
+  ['D34','2B12',2,'Sample bias identification and mitigation is central to Evaluating and Designing Sampling Procedures.'],
+  ['D34','2B22',2,'Sample bias as a form of unfair representation is an ethical dimension of data collection.'],
+  ['D35','2D42',5,'Extension statements are arguments about generalizability — exactly what Evaluating Model Generalizability addresses.'],
+  ['D36','2C33',3,'Subset effects and Simpson\'s Paradox are discoverable when investigating multi-variable questions.'],
+  ['D36','2D42',2,'Simpson\'s Paradox limits the generalizability of aggregate findings — a generalizability issue.'],
+  ['D37','2D43',3,'Meta-analysis as study validation connects to Comparing and Improving Models across studies.'],
+  ['D37','2E22',3,'Reproducible documentation is a prerequisite for study replication and meta-analysis.'],
+  ['E11','2C21',6,'Sense-making visualizations are the exploratory tool for multivariate relationship description.'],
+  ['E11','2E13',5,'Claim-supportive visualization design draws on the sense-making skills developed here.'],
+  ['E12','2E13',5,'Investigative visualizations directly serve claim-making — they are the evidential backbone of claims.'],
+  ['E12','2C11',5,'Single variable distribution investigation uses and produces visualizations.'],
+  ['E13','2C21',6,'Clear design principles apply directly to multivariate relationship displays.'],
+  ['E13','2E13',5,'Clear design for user interpretation is the core of Designing Claim Supportive Visualizations.'],
+  ['E14','2C21',12,'Graphical literacy is required for reading and interpreting multivariate visualizations.'],
+  ['E15','2C21',5,'Representational fluency in choosing multivariate display types lives here.'],
+  ['E15','2E23',4,'Scale and layout choices — and how they can mislead — are central to Recognizing Misleading Communication.'],
+  ['E16','2C21',6,'Matching visual type to data type is a multivariate visualization skill.'],
+  ['E21','2E21',8,'Connecting narratives to visualizations is communicating with completeness and clarity.'],
+  ['E22','2E21',16,'Writing data stories is the primary activity of Communicate with Completeness and Clarity.'],
+  ['E23','2E21',9,'Adapting narratives for audiences is a key dimension of clear communication.'],
+  ['E31','2E23',7,'Interrogating author intent is the analytical core of Recognizing Misleading Communication.'],
+  ['E31','2E21',6,'Transparent authorship and clear source attribution support complete, credible communication.'],
+  ['E32','2A15',5,'Advocacy with data is a direct expression of data\'s power to drive change — Power and Responsibility.'],
+  ['E32','2E21',4,'Advocacy data communication requires the completeness and clarity skills developed here.'],
+  ['E33','2A13',2,'Civic data practices cultivate the habit of questioning — a questioning disposition applied to civic life.'],
+  ['E33','2A15',2,'Civic engagement with data reflects data\'s power and responsibility in democratic contexts.'],
+  ['E34','2B22',3,'Environmental and human costs of technology are ethical dimensions of data collection and use.'],
+  ['E34','2A15',3,'Societal impacts of data-driven technology are central to Power and Responsibility of Data.'],
 ];
 
-// ─── Pre-compute degrees ──────────────────────────────────────────
+// ─── Build lookup maps ────────────────────────────────────────────
+const v1Map = {}, v2Map = {};
+V1.forEach(n => v1Map[n.id] = n);
+V2.forEach(n => v2Map[n.id] = n);
+
+// Degree maps
 const v1Out = {}, v2In = {};
-LINKS.forEach(([s,t]) => {
+RAW_LINKS.forEach(([s,t,c]) => {
   v1Out[s] = (v1Out[s]||0)+1;
-  v2In[t]  = (v2In[t]||0)+1;
+  v2In[t]  = (v2In[t] ||0)+c;
 });
 
-// ─── Layout constants ─────────────────────────────────────────────
-const NODE_H   = 8;   // bar height per node slot
-const PAD      = 3;   // gap between bars
-const PITCH    = NODE_H + PAD;
-const ML       = 170; // left margin (for V1 labels)
-const MR       = 250; // right margin (for V2 labels)
-const COL_W    = 12;  // bar width
-const MID_GAP  = 580; // horizontal distance between columns
-const MT       = 50;  // top margin
-const MB       = 30;
+// ─── Layout ───────────────────────────────────────────────────────
+const BASE = 1.5;   // px per competency
+const PAD  = 4;     // gap between nodes
+const ML   = 175;   // left margin
+const MR   = 260;   // right margin
+const MT   = 55;
+const COL_W = 10;
+const MID   = 560;
 
-const totalH = Math.max(V1.length, V2.length) * PITCH + MT + MB;
-const totalW = ML + COL_W + MID_GAP + COL_W + MR;
+function computePositions(nodes, getHeight) {
+  const pos = {};
+  let y = MT;
+  nodes.forEach(n => {
+    const h = getHeight(n);
+    pos[n.id] = { y0: y, h };
+    y += h + PAD;
+  });
+  return pos;
+}
 
-// Node y-positions (top of each bar)
-const v1Y = {}, v2Y = {};
-V1.forEach((n,i) => v1Y[n.id] = MT + i*PITCH);
-V2.forEach((n,i) => v2Y[n.id] = MT + i*PITCH);
+const v1Pos = computePositions(V1, n => Math.max(3, n.comp * BASE));
+const v2InComp = {};
+RAW_LINKS.forEach(([s,t,c]) => { v2InComp[t] = (v2InComp[t]||0)+c; });
+const v2Pos = computePositions(V2, n => Math.max(3, (v2InComp[n.id]||2) * BASE));
 
-// x positions
-const xL = ML;              // left edge of V1 bar
-const xR = ML + COL_W + MID_GAP; // left edge of V2 bar
+const totalH = Math.max(
+  v1Pos[V1[V1.length-1].id].y0 + v1Pos[V1[V1.length-1].id].h + 30,
+  v2Pos[V2[V2.length-1].id].y0 + v2Pos[V2[V2.length-1].id].h + 30
+);
+const totalW = ML + COL_W + MID + COL_W + MR;
 
-// ─── Build link objects with vertical offset tracking ─────────────
-// For each node, track how many links have already been drawn
-// so we can stack them within the bar height
-
-// Count outgoing offsets per V1 node, incoming per V2 node
+// ─── Build link objects with vertical offsets ─────────────────────
 const v1Used = {}, v2Used = {};
-V1.forEach(n => v1Used[n.id] = 0);
-V2.forEach(n => v2Used[n.id] = 0);
+const linkObjs = RAW_LINKS.map(([sid, tid, comp, rationale]) => {
+  const sv = v1Pos[sid], tv = v2Pos[tid];
+  const sTot = v1Map[sid].comp;
+  const tTot = v2InComp[tid] || comp;
 
-const linkObjects = LINKS.map(([sid,tid]) => {
-  const sNode = V1.find(n=>n.id===sid);
-  const tNode = V2.find(n=>n.id===tid);
-  const sTotal = v1Out[sid];
-  const tTotal = v2In[tid];
-  // Allocate a horizontal slice within each bar
-  const sSlice = NODE_H / sTotal;
-  const tSlice = NODE_H / tTotal;
-  const sy0 = v1Y[sid] + v1Used[sid] * sSlice;
-  const ty0 = v2Y[tid] + v2Used[tid] * tSlice;
-  v1Used[sid]++;
-  v2Used[tid]++;
-  return {
-    sid, tid,
-    sy0, sy1: sy0 + sSlice,
-    ty0, ty1: ty0 + tSlice,
-    strand: sNode.strand,
-    sNode, tNode
-  };
+  const sH = sv.h * (comp / sTot);
+  const tH = tv.h * (comp / tTot);
+
+  const sy0 = sv.y0 + (v1Used[sid] || 0);
+  const ty0 = tv.y0 + (v2Used[tid] || 0);
+
+  v1Used[sid] = (v1Used[sid] || 0) + sH;
+  v2Used[tid] = (v2Used[tid] || 0) + tH;
+
+  return { sid, tid, comp, rationale,
+    sy0, sy1: sy0 + sH,
+    ty0, ty1: ty0 + tH,
+    strand: v1Map[sid].strand };
 });
 
 // ─── Draw ─────────────────────────────────────────────────────────
@@ -479,250 +504,305 @@ const svg = d3.select('#chart')
   .style('font-family', "'DM Sans', sans-serif");
 
 // Column headers
-svg.append('text')
-  .attr('x', xL + COL_W/2)
-  .attr('y', 18)
-  .attr('text-anchor','middle')
-  .attr('font-family','DM Serif Display, serif')
-  .attr('font-size', 13)
-  .attr('fill','#e6edf3')
-  .text('Version 1  ·  83 concepts');
+const hdr = (x, anchor, line1, line2) => {
+  svg.append('text').attr('x',x).attr('y',20).attr('text-anchor',anchor)
+    .attr('font-family','Fraunces, serif').attr('font-size',13).attr('font-weight',300)
+    .attr('fill','#dde4ee').text(line1);
+  svg.append('text').attr('x',x).attr('y',35).attr('text-anchor',anchor)
+    .attr('font-size',9).attr('fill','#7a8899').text(line2);
+};
+hdr(ML + COL_W/2, 'middle', 'Version 1  ·  83 concepts', '~699 competencies across K–12');
+hdr(ML+COL_W+MID+COL_W/2, 'middle', 'Version 2  ·  38 concepts', 'consolidated learning progressions');
 
-svg.append('text')
-  .attr('x', xL + COL_W/2)
-  .attr('y', 33)
-  .attr('text-anchor','middle')
-  .attr('font-size', 9.5)
-  .attr('fill','#8b949e')
-  .text('Original progressions');
+// ─── Tooltip ──────────────────────────────────────────────────────
+const ttEl = document.getElementById('tt');
+const showTT = (e, html) => { ttEl.innerHTML = html; ttEl.classList.add('show'); moveTT(e); };
+const moveTT = e => {
+  const x=e.clientX+14, y=e.clientY-10;
+  ttEl.style.left=(x+ttEl.offsetWidth>window.innerWidth?x-ttEl.offsetWidth-28:x)+'px';
+  ttEl.style.top=(y+ttEl.offsetHeight>window.innerHeight?y-ttEl.offsetHeight:y)+'px';
+};
+const hideTT = () => ttEl.classList.remove('show');
 
-svg.append('text')
-  .attr('x', xR + COL_W/2)
-  .attr('y', 18)
-  .attr('text-anchor','middle')
-  .attr('font-family','DM Serif Display, serif')
-  .attr('font-size', 13)
-  .attr('fill','#e6edf3')
-  .text('Version 2  ·  38 concepts');
+// ─── Panel ────────────────────────────────────────────────────────
+const panel     = document.getElementById('panel');
+const panelTitle= document.getElementById('panelTitle');
+const panelBody = document.getElementById('panelBody');
+const chartWrap = document.getElementById('chartWrap');
 
-svg.append('text')
-  .attr('x', xR + COL_W/2)
-  .attr('y', 33)
-  .attr('text-anchor','middle')
-  .attr('font-size', 9.5)
-  .attr('fill','#8b949e')
-  .text('Consolidated progressions');
-
-// ─── Links ────────────────────────────────────────────────────────
-const tt = document.getElementById('tt');
-
-function ttShow(e, html) {
-  tt.innerHTML = html;
-  tt.classList.add('show');
-  ttMove(e);
+function gradeBars(node, color) {
+  const max = Math.max(...node.gb);
+  return `<div class="grade-bars">
+    ${node.gb.map((v,i)=>`<div class="gb-col">
+      <div class="gb-bar" style="height:${max>0?Math.max(2,v/max*20):2}px;background:${color};opacity:${v>0?0.7:0.15}"></div>
+      <div class="gb-label">${GB_LABELS[i].replace('–','-')}</div>
+    </div>`).join('')}
+  </div>`;
 }
-function ttMove(e) {
-  const x = e.clientX+14, y = e.clientY-10;
-  const w = tt.offsetWidth, h = tt.offsetHeight;
-  tt.style.left = (x+w > window.innerWidth ? x-w-28 : x)+'px';
-  tt.style.top  = (y+h > window.innerHeight ? y-h : y)+'px';
-}
-function ttHide() { tt.classList.remove('show'); }
 
+function openPanel(type, id) {
+  panel.classList.add('open');
+  chartWrap.classList.add('panel-open');
+
+  if (type === 'v1') {
+    const n = v1Map[id];
+    const color = SC[n.strand];
+    const links = linkObjs.filter(l => l.sid === id);
+    const isSplit = links.length > 1;
+
+    panelTitle.textContent = `V1 · ${n.code}`;
+    panelBody.innerHTML = `
+      <div class="p-concept">
+        <div class="p-concept-code" style="color:${color}">${n.code} · Version 1</div>
+        <div class="p-concept-name">${n.name}</div>
+        <div class="p-comp-total"><strong>${n.comp}</strong> competencies · Strand ${n.strand}
+          ${isSplit ? ' · <span style="color:#f87171">Splits into '+links.length+' V2 concepts</span>' : ''}
+        </div>
+        ${gradeBars(n, color)}
+      </div>
+      <div class="p-divider"></div>
+      <div class="p-section-lbl">Maps to in Version 2</div>
+      ${links.map(l => {
+        const t = v2Map[l.tid];
+        const tc = SC[t.strand];
+        return `<div class="p-flow">
+          <div class="p-flow-header">
+            <div class="p-flow-code" style="color:${tc}">${t.code}</div>
+            <div class="p-flow-badge badge-comp">${l.comp} competencies</div>
+          </div>
+          <div class="p-flow-name">${t.name}</div>
+          <div class="p-flow-rationale">${l.rationale}</div>
+        </div>`;
+      }).join('')}
+      <div class="p-note">⚠ Competency counts are proportionally allocated estimates. Individual competency-level mapping is pending.</div>
+    `;
+
+  } else if (type === 'v2') {
+    const n = v2Map[id];
+    const color = SC[n.strand];
+    const links = linkObjs.filter(l => l.tid === id);
+    const totalIn = links.reduce((s,l) => s+l.comp, 0);
+    const isMerge = links.length > 1;
+
+    panelTitle.textContent = `V2 · ${n.code}`;
+    panelBody.innerHTML = `
+      <div class="p-concept">
+        <div class="p-concept-code" style="color:${color}">${n.code} · Version 2</div>
+        <div class="p-concept-name">${n.name}</div>
+        <div class="p-comp-total"><strong>${totalIn}</strong> incoming competencies · Strand ${n.strand}
+          ${isMerge ? ' · <span style="color:#60aff5">Absorbs '+links.length+' V1 concepts</span>' : ''}
+          ${links.length===0 ? ' · <span style="color:#f87171">New in V2 — no direct V1 predecessor</span>' : ''}
+        </div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="p-section-lbl">Receives from Version 1</div>
+      ${links.length === 0 ? '<div style="color:var(--muted);font-size:0.8rem;font-style:italic">This concept is new in Version 2 and has no direct predecessor in Version 1.</div>' : ''}
+      ${links.map(l => {
+        const s = v1Map[l.sid];
+        const sc = SC[s.strand];
+        return `<div class="p-flow">
+          <div class="p-flow-header">
+            <div class="p-flow-code" style="color:${sc}">${s.code}</div>
+            <div class="p-flow-badge badge-comp">${l.comp} competencies</div>
+          </div>
+          <div class="p-flow-name">${s.name}</div>
+          <div class="p-flow-rationale">${l.rationale}</div>
+        </div>`;
+      }).join('')}
+      <div class="p-note">⚠ Competency counts are proportionally allocated estimates. Individual competency-level mapping is pending.</div>
+    `;
+
+  } else if (type === 'link') {
+    const l = id; // link object
+    const s = v1Map[l.sid], t = v2Map[l.tid];
+    const sc = SC[s.strand], tc = SC[t.strand];
+    const isSplit = v1Out[l.sid] > 1;
+
+    panelTitle.textContent = `${s.code} → ${t.code}`;
+    panelBody.innerHTML = `
+      <div class="p-concept">
+        <div class="p-concept-code" style="color:${sc}">${s.code} · Version 1</div>
+        <div class="p-concept-name">${s.name}</div>
+        <div class="p-comp-total"><strong>${l.comp}</strong> of ${s.comp} competencies flow here
+          ${isSplit ? ' · <span style="color:#f87171">Split mapping</span>' : ''}
+        </div>
+        ${gradeBars(s, sc)}
+      </div>
+      <div style="text-align:center;color:var(--dim);font-size:1.2rem;padding:0.5rem 0">↓</div>
+      <div class="p-concept">
+        <div class="p-concept-code" style="color:${tc}">${t.code} · Version 2</div>
+        <div class="p-concept-name">${t.name}</div>
+        <div class="p-comp-total">Receives ${l.comp} competencies from this source</div>
+      </div>
+      <div class="p-divider"></div>
+      <div class="p-section-lbl">Mapping Rationale</div>
+      <div style="font-size:0.82rem;color:var(--text);line-height:1.65">${l.rationale}</div>
+      <div class="p-note" style="margin-top:1rem">⚠ Competency count is a proportional estimate. Individual competency-level mapping is pending.</div>
+    `;
+  }
+}
+
+document.getElementById('panelClose').addEventListener('click', () => {
+  panel.classList.remove('open');
+  chartWrap.classList.remove('panel-open');
+});
+
+// ─── Bands ────────────────────────────────────────────────────────
 function bandPath(sy0, sy1, ty0, ty1) {
-  const x0 = xL + COL_W;
-  const x1 = xR;
+  const x0 = ML + COL_W;
+  const x1 = ML + COL_W + MID;
   const cx = (x0 + x1) / 2;
   return `M${x0},${sy0} C${cx},${sy0} ${cx},${ty0} ${x1},${ty0}
           L${x1},${ty1} C${cx},${ty1} ${cx},${sy1} ${x0},${sy1} Z`;
 }
 
-const linkPaths = svg.append('g').attr('class','lnks')
+const bands = svg.append('g')
   .selectAll('path')
-  .data(linkObjects)
+  .data(linkObjs)
   .join('path')
-  .attr('d', d => bandPath(d.sy0, d.sy1, d.ty0, d.ty1))
-  .attr('fill', d => SC[d.strand])
-  .attr('fill-opacity', 0.18)
-  .attr('stroke', 'none')
+  .attr('d', l => bandPath(l.sy0, l.sy1, l.ty0, l.ty1))
+  .attr('fill', l => SC[l.strand])
+  .attr('fill-opacity', 0.2)
+  .attr('stroke','none')
   .style('cursor','pointer')
-  .on('mouseover', function(event, d) {
+  .on('mouseover', function(e, l) {
     d3.select(this).attr('fill-opacity', 0.55);
-    const isSplit = v1Out[d.sid] > 1;
-    ttShow(event, `
-      <div class="tt-title">${d.sNode.code} → ${d.tNode.code}</div>
-      <div class="tt-body">
-        <b>V1:</b> ${d.sNode.name}<br>
-        <b>V2:</b> ${d.tNode.name}
-      </div>
-      <span class="tt-tag ${isSplit?'tag-s':'tag-m'}">${isSplit?'Split':'Merge'}</span>
-    `);
+    showTT(e, `<div class="tt-t">${l.sid.replace(/\d/g,m=>'.'+m).replace('..','.')} → 2${l.tid.replace('2','').replace(/\d/g,m=>'.'+m).replace('..','.')} </div>
+      <div class="tt-b"><b>${v1Map[l.sid].name}</b><br>→ ${v2Map[l.tid].name}<br>${l.comp} competencies</div>
+      <span class="tt-tag ${v1Out[l.sid]>1?'ts':'tm'}">${v1Out[l.sid]>1?'Split':'Merge'}</span>`);
   })
-  .on('mousemove', ttMove)
-  .on('mouseout', function(event, d) {
-    d3.select(this).attr('fill-opacity', 0.18);
-    ttHide();
+  .on('mousemove', moveTT)
+  .on('mouseout', function(e, l) {
+    d3.select(this).attr('fill-opacity', 0.2);
+    hideTT();
+  })
+  .on('click', function(e, l) {
+    e.stopPropagation();
+    hideTT();
+    bands.attr('fill-opacity', 0.05);
+    d3.select(this).attr('fill-opacity', 0.7);
+    openPanel('link', l);
   });
 
-// ─── V1 bars + labels ─────────────────────────────────────────────
-const v1Groups = svg.append('g')
-  .selectAll('g')
-  .data(V1)
-  .join('g')
-  .style('cursor','pointer');
+// ─── V1 bars ──────────────────────────────────────────────────────
+const v1G = svg.append('g').selectAll('g').data(V1).join('g').style('cursor','pointer');
 
-v1Groups.append('rect')
-  .attr('x', xL)
-  .attr('y', d => v1Y[d.id])
+v1G.append('rect')
+  .attr('x', ML)
+  .attr('y', n => v1Pos[n.id].y0)
   .attr('width', COL_W)
-  .attr('height', NODE_H)
-  .attr('fill', d => SC[d.strand])
+  .attr('height', n => v1Pos[n.id].h)
+  .attr('fill', n => SC[n.strand])
   .attr('rx', 1)
-  .on('mouseover', function(event, d) {
-    const out = v1Out[d.id]||0;
-    ttShow(event, `
-      <div class="tt-title">${d.code} · ${d.name}</div>
-      <div class="tt-body">Version 1 · Strand ${d.strand}</div>
-      <span class="tt-tag ${out>1?'tag-s':'tag-m'}">${out>1?'Split → '+out+' V2 concepts':'Single mapping'}</span>
-    `);
-    // highlight connected paths
-    linkPaths.attr('fill-opacity', l => l.sid===d.id ? 0.65 : 0.04);
+  .on('mouseover', function(e, n) {
+    showTT(e, `<div class="tt-t">${n.code} · ${n.name}</div>
+      <div class="tt-b">Version 1 · ${n.comp} competencies · Strand ${n.strand}</div>
+      <span class="tt-tag ${v1Out[n.id]>1?'ts':'tm'}">${v1Out[n.id]>1?'Split → '+v1Out[n.id]+' V2 concepts':'Single mapping'}</span>`);
+    bands.attr('fill-opacity', l => l.sid===n.id ? 0.55 : 0.04);
   })
-  .on('mousemove', ttMove)
-  .on('mouseout', function() {
-    linkPaths.attr('fill-opacity', 0.18);
-    ttHide();
+  .on('mousemove', moveTT)
+  .on('mouseout', function() { bands.attr('fill-opacity', 0.2); hideTT(); })
+  .on('click', function(e, n) {
+    e.stopPropagation();
+    hideTT();
+    bands.attr('fill-opacity', l => l.sid===n.id ? 0.45 : 0.05);
+    openPanel('v1', n.id);
   });
 
-// Code label left of bar
-v1Groups.append('text')
-  .attr('x', xL - 4)
-  .attr('y', d => v1Y[d.id] + NODE_H/2)
-  .attr('text-anchor','end')
-  .attr('dominant-baseline','middle')
-  .attr('font-family','DM Mono, monospace')
-  .attr('font-size', 8)
-  .attr('fill', d => SC[d.strand])
-  .attr('fill-opacity', 0.9)
-  .text(d => d.code);
+// Code label
+v1G.append('text')
+  .attr('x', ML-4).attr('y', n => v1Pos[n.id].y0 + v1Pos[n.id].h/2)
+  .attr('text-anchor','end').attr('dominant-baseline','middle')
+  .attr('font-family','DM Mono, monospace').attr('font-size', 7.5)
+  .attr('fill', n => SC[n.strand]).attr('fill-opacity', 0.85)
+  .text(n => n.code);
 
-// Short name label (truncated)
-v1Groups.append('text')
-  .attr('x', xL - 40)
-  .attr('y', d => v1Y[d.id] + NODE_H/2)
-  .attr('text-anchor','end')
-  .attr('dominant-baseline','middle')
-  .attr('font-size', 8)
-  .attr('fill','#8b949e')
-  .text(d => d.name.length > 28 ? d.name.slice(0,27)+'…' : d.name);
+// Short name
+v1G.append('text')
+  .attr('x', ML-38).attr('y', n => v1Pos[n.id].y0 + v1Pos[n.id].h/2)
+  .attr('text-anchor','end').attr('dominant-baseline','middle')
+  .attr('font-size', 7.5).attr('fill','#7a8899')
+  .text(n => n.name.length>30 ? n.name.slice(0,29)+'…' : n.name);
 
-// ─── V2 bars + labels ─────────────────────────────────────────────
-const v2Groups = svg.append('g')
-  .selectAll('g')
-  .data(V2)
-  .join('g')
-  .style('cursor','pointer');
+// ─── V2 bars ──────────────────────────────────────────────────────
+const xR = ML + COL_W + MID;
+const v2G = svg.append('g').selectAll('g').data(V2).join('g').style('cursor','pointer');
 
-v2Groups.append('rect')
+v2G.append('rect')
   .attr('x', xR)
-  .attr('y', d => v2Y[d.id])
+  .attr('y', n => v2Pos[n.id].y0)
   .attr('width', COL_W)
-  .attr('height', NODE_H)
-  .attr('fill', d => SC[d.strand])
+  .attr('height', n => v2Pos[n.id].h)
+  .attr('fill', n => SC[n.strand])
   .attr('rx', 1)
-  .on('mouseover', function(event, d) {
-    const inp = v2In[d.id]||0;
-    ttShow(event, `
-      <div class="tt-title">${d.code} · ${d.name}</div>
-      <div class="tt-body">Version 2 · Strand ${d.strand}</div>
-      <span class="tt-tag ${inp>1?'tag-m':'tag-s'}">${inp>1?'Absorbs '+inp+' V1 concepts':'Single source'}</span>
-    `);
-    linkPaths.attr('fill-opacity', l => l.tid===d.id ? 0.65 : 0.04);
+  .on('mouseover', function(e, n) {
+    const inc = v2InComp[n.id]||0;
+    showTT(e, `<div class="tt-t">${n.code} · ${n.name}</div>
+      <div class="tt-b">Version 2 · ~${inc} incoming competencies · Strand ${n.strand}</div>
+      <span class="tt-tag tm">Absorbs ${linkObjs.filter(l=>l.tid===n.id).length} V1 concepts</span>`);
+    bands.attr('fill-opacity', l => l.tid===n.id ? 0.55 : 0.04);
   })
-  .on('mousemove', ttMove)
-  .on('mouseout', function() {
-    linkPaths.attr('fill-opacity', 0.18);
-    ttHide();
+  .on('mousemove', moveTT)
+  .on('mouseout', function() { bands.attr('fill-opacity', 0.2); hideTT(); })
+  .on('click', function(e, n) {
+    e.stopPropagation();
+    hideTT();
+    bands.attr('fill-opacity', l => l.tid===n.id ? 0.45 : 0.05);
+    openPanel('v2', n.id);
   });
 
-// Code label right of bar
-v2Groups.append('text')
-  .attr('x', xR + COL_W + 4)
-  .attr('y', d => v2Y[d.id] + NODE_H/2)
+// Code label
+v2G.append('text')
+  .attr('x', xR+COL_W+4).attr('y', n => v2Pos[n.id].y0 + v2Pos[n.id].h/2)
   .attr('dominant-baseline','middle')
-  .attr('font-family','DM Mono, monospace')
-  .attr('font-size', 8)
-  .attr('fill', d => SC[d.strand])
-  .attr('fill-opacity', 0.9)
-  .text(d => d.code);
+  .attr('font-family','DM Mono, monospace').attr('font-size', 7.5)
+  .attr('fill', n => SC[n.strand]).attr('fill-opacity', 0.85)
+  .text(n => n.code);
 
 // Full name
-v2Groups.append('text')
-  .attr('x', xR + COL_W + 40)
-  .attr('y', d => v2Y[d.id] + NODE_H/2)
+v2G.append('text')
+  .attr('x', xR+COL_W+38).attr('y', n => v2Pos[n.id].y0 + v2Pos[n.id].h/2)
   .attr('dominant-baseline','middle')
-  .attr('font-size', 8)
-  .attr('fill','#c9d1d9')
-  .text(d => d.name.length > 42 ? d.name.slice(0,41)+'…' : d.name);
+  .attr('font-size', 7.5).attr('fill','#c5cdd8')
+  .text(n => n.name.length>44 ? n.name.slice(0,43)+'…' : n.name);
+
+// ─── Click away resets ────────────────────────────────────────────
+svg.on('click', () => { bands.attr('fill-opacity', 0.2); });
 
 // ─── Filters ──────────────────────────────────────────────────────
-let fStrand = 'all', fPattern = 'all';
+let fStrand='all', fPattern='all';
 
 function applyFilter() {
-  const visLinks = new Set();
-  const visV1 = new Set(), visV2 = new Set();
-
-  linkObjects.forEach((l,i) => {
+  const vis = new Set(), vv1 = new Set(), vv2 = new Set();
+  linkObjs.forEach((l,i) => {
     const stOk = fStrand==='all' || l.strand===fStrand;
     const isSplit = v1Out[l.sid]>1;
-    const isMerge = v2In[l.tid]>1;
+    const isMerge = (linkObjs.filter(x=>x.tid===l.tid).length)>1;
     const ptOk = fPattern==='all'
       || (fPattern==='splits' && isSplit)
       || (fPattern==='merges' && isMerge);
-    if (stOk && ptOk) {
-      visLinks.add(i);
-      visV1.add(l.sid);
-      visV2.add(l.tid);
-    }
+    if (stOk && ptOk) { vis.add(i); vv1.add(l.sid); vv2.add(l.tid); }
   });
-
-  linkPaths.transition().duration(200)
-    .attr('fill-opacity', (_,i) => visLinks.has(i) ? 0.22 : 0.03);
-
-  v1Groups.selectAll('rect').transition().duration(200)
-    .attr('opacity', d => visV1.has(d.id) ? 1 : 0.1);
-  v1Groups.selectAll('text').transition().duration(200)
-    .attr('opacity', d => visV1.has(d.id) ? 1 : 0.1);
-
-  v2Groups.selectAll('rect').transition().duration(200)
-    .attr('opacity', d => visV2.has(d.id) ? 1 : 0.1);
-  v2Groups.selectAll('text').transition().duration(200)
-    .attr('opacity', d => visV2.has(d.id) ? 1 : 0.1);
+  bands.transition().duration(200).attr('fill-opacity', (_,i) => vis.has(i) ? 0.22 : 0.03);
+  v1G.selectAll('rect').transition().duration(200).attr('opacity', n => vv1.has(n.id) ? 1 : 0.1);
+  v1G.selectAll('text').transition().duration(200).attr('opacity', n => vv1.has(n.id) ? 1 : 0.08);
+  v2G.selectAll('rect').transition().duration(200).attr('opacity', n => vv2.has(n.id) ? 1 : 0.1);
+  v2G.selectAll('text').transition().duration(200).attr('opacity', n => vv2.has(n.id) ? 1 : 0.08);
 }
 
 document.querySelectorAll('.btn[data-f]').forEach(btn => {
   btn.addEventListener('click', function() {
-    const f = this.dataset.f;
-    const c = this.dataset.c;
-    const strandVals = ['all','A','B','C','D','E'];
-    const patternVals = ['splits','merges'];
-
-    if (strandVals.includes(f)) {
-      document.querySelectorAll('.btn[data-f]').forEach(b => {
-        if (strandVals.includes(b.dataset.f)) b.className = 'btn';
-      });
-      fStrand = f;
-      this.classList.add(f==='all' ? 'act-all' : 'act-'+c);
+    const f=this.dataset.f, c=this.dataset.c;
+    const strands=['all','A','B','C','D','E'];
+    const patterns=['splits','merges'];
+    if (strands.includes(f)) {
+      document.querySelectorAll('.btn[data-f]').forEach(b => { if(strands.includes(b.dataset.f)) b.className='btn'; });
+      fStrand=f;
+      this.classList.add(f==='all'?'aa':'b'+c);
     } else {
-      document.querySelectorAll('.btn[data-f]').forEach(b => {
-        if (patternVals.includes(b.dataset.f)) b.className = 'btn';
-      });
-      if (fPattern === f) {
-        fPattern = 'all';
-      } else {
-        fPattern = f;
-        this.classList.add('act-'+f);
-      }
+      document.querySelectorAll('.btn[data-f]').forEach(b => { if(patterns.includes(b.dataset.f)) b.className='btn'; });
+      fPattern = fPattern===f ? 'all' : f;
+      if (fPattern===f) this.classList.add('b'+f.slice(0,1));
     }
     applyFilter();
   });
