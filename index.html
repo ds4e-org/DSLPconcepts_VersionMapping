@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -120,13 +120,7 @@
        Click any bar or band to open the detail panel.
        Hover to preview. Filter by strand or pattern.</p>
   </div>
-  <div class="stats">
-    <div class="stat"><div class="stat-n" style="color:var(--muted)">83</div><div class="stat-l">V1 Concepts</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--muted)">→</div><div class="stat-l">&nbsp;</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--muted)">38</div><div class="stat-l">V2 Concepts</div></div>
-    <div class="stat"><div class="stat-n" style="color:#f87171">45</div><div class="stat-l">Splits</div></div>
-    <div class="stat"><div class="stat-n" style="color:#60aff5">~699</div><div class="stat-l">Competencies</div></div>
-  </div>
+
 </header>
 
 <div class="controls">
@@ -264,21 +258,21 @@ const V1 = [
 // ─── V2 nodes ──────────────────────────────────────────────────────
 const V2 = [
   {id:'2A11',code:'A.1.1',name:'Understanding Variation Through Data Investigation',strand:'A'},
-  {id:'2A12',code:'A.1.2',name:'Recognizing Data in All of its Forms',strand:'A'},
-  {id:'2A13',code:'A.1.3',name:'Cultivating a Questioning Disposition',strand:'A'},
-  {id:'2A14',code:'A.1.4',name:'Embracing Iteration in the Data Investigation Process',strand:'A'},
-  {id:'2A15',code:'A.1.5',name:'Recognizing the Power and Responsibility of Data',strand:'A'},
-  {id:'2A21',code:'A.2.1',name:'Formulating Investigatable Questions',strand:'A'},
-  {id:'2A22',code:'A.2.2',name:'Identifying Questions from Data',strand:'A'},
-  {id:'2B11',code:'B.1.1',name:'Measurements',strand:'B'},
-  {id:'2B12',code:'B.1.2',name:'Evaluating and Designing Sampling Procedures',strand:'B'},
-  {id:'2B21',code:'B.2.1',name:'Research Design',strand:'B'},
-  {id:'2B22',code:'B.2.2',name:'Ethics in Data Collection and Use',strand:'B'},
-  {id:'2B31',code:'B.3.1',name:'Organizing Data',strand:'B'},
-  {id:'2B32',code:'B.3.2',name:'Data Cleaning',strand:'B'},
-  {id:'2B33',code:'B.3.3',name:'Processing Data',strand:'B'},
-  {id:'2C11',code:'C.1.1',name:'Describing & Visualizing Single Variable Distributions',strand:'C'},
-  {id:'2C21',code:'C.2.1',name:'Describing & Visualizing Multivariate Relationships',strand:'C'},
+  {id:'2A13',code:'A.1.2',name:'Cultivating a Questioning Disposition',strand:'A'},
+  {id:'2A14',code:'A.1.3',name:'Embracing Iteration in the Data Investigation Process',strand:'A'},
+  {id:'2A12',code:'A.2.1',name:'Recognizing Data in All of its Forms',strand:'A'},
+  {id:'2A15',code:'A.2.2',name:'Recognizing the Power and Responsibility of Data',strand:'A'},
+  {id:'2A21',code:'A.3.1',name:'Formulating Investigatable Questions',strand:'A'},
+  {id:'2A22',code:'A.3.2',name:'Identifying Questions from Data',strand:'A'},
+  {id:'2B11',code:'B.1.1',name:'Designing and Evaluating Measurements',strand:'B'},
+  {id:'2B12',code:'B.2.1',name:'Evaluating and Designing Sampling Procedures',strand:'B'},
+  {id:'2B21',code:'B.2.2',name:'Investigation Design',strand:'B'},
+  {id:'2B22',code:'B.3.1',name:'Ethics in Data Collection/Production and Use',strand:'B'},
+  {id:'2B31',code:'B.4.1',name:'Organizing Data',strand:'B'},
+  {id:'2B32',code:'B.4.2',name:'Data Cleaning',strand:'B'},
+  {id:'2B33',code:'B.4.3',name:'Processing Data',strand:'B'},
+  {id:'2C11',code:'C.1.1',name:'Describing and Visualizing Single Variable Distributions',strand:'C'},
+  {id:'2C21',code:'C.2.1',name:'Describing and Visualizing Multivariate Relationships',strand:'C'},
   {id:'2C31',code:'C.3.1',name:'Using Technology for Data Exploration',strand:'C'},
   {id:'2C32',code:'C.3.2',name:'Investigating Questions about Single Variables',strand:'C'},
   {id:'2C33',code:'C.3.3',name:'Investigating Questions about Multiple Variables',strand:'C'},
@@ -287,7 +281,7 @@ const V2 = [
   {id:'2D13',code:'D.1.3',name:'Probability Distributions as Models',strand:'D'},
   {id:'2D21',code:'D.2.1',name:'Building Models for Quantitative Outcomes',strand:'D'},
   {id:'2D22',code:'D.2.2',name:'Building Models for Categorical Outcomes',strand:'D'},
-  {id:'2D23',code:'D.2.3',name:'Building Simulations for Inference',strand:'D'},
+  {id:'2D23',code:'D.2.3',name:'Modeling Using Simulation',strand:'D'},
   {id:'2D31',code:'D.3.1',name:'Making Predictions with Models',strand:'D'},
   {id:'2D32',code:'D.3.2',name:'Investigating Processes and Causal Relationships',strand:'D'},
   {id:'2D33',code:'D.3.3',name:'Interpret Model Parameters in Context',strand:'D'},
@@ -319,8 +313,9 @@ const RAW_LINKS = [
   ['A31','2A11',3,'The investigative process generates understanding of variation; both concepts describe how people engage with data to make sense of the world.'],
   ['A31','2A14',3,'The iterative, cyclical nature of investigation is the structural heart of Embracing Iteration.'],
   ['A32','2A14',5,'Iteration is renamed and expanded here; content maps directly.'],
-  ['A33','2A14',3,'Dynamic inferences evolve through the iterative process — new data prompts revision, which is iteration in action.'],
-  ['A33','2A11',2,'Updating understanding as evidence accumulates is how variation understanding develops.'],
+  ['A33','2A14',2,'Dynamic inferences evolve through the iterative process — new data prompts revision, which is iteration in action.'],
+  ['A33','2A11',1,'Updating understanding as evidence accumulates is how variation understanding develops.'],
+  ['A33','2E11',2,'Drawing informal inferences — using data as evidence to reach conclusions that extend beyond the immediate dataset — is now explicitly named and taught in Identifying Evidence Based Claims.'],
   ['A34','2C32',4,'Context-sensitive interpretation of single-variable findings is central to Investigating Questions about Single Variables.'],
   ['A34','2C33',3,'Context-sensitive interpretation across multiple variables lives in the multi-variable investigation concept.'],
   ['A35','2A13',8,'Student data agency is fully expressed through the questioning disposition — curiosity, autonomy, and personal inquiry.'],
@@ -332,7 +327,8 @@ const RAW_LINKS = [
   ['B21','2A21',9,'Designing data-based investigations is the procedural side of Formulating Investigatable Questions.'],
   ['B22','2B11',14,'Simulation and sensor-based data generation is a form of measurement — now consolidated under Measurements.'],
   ['B23','2B12',5,'Collection planning is central to designing sound sampling procedures.'],
-  ['B24','2A22',14,'Finding and evaluating existing datasets is exactly what Identifying Questions from Data addresses.'],
+  ['B24','2A22',9,'Finding and evaluating existing datasets — including examining provenance, relevance, and what questions the data can and cannot answer — is a core activity of Identifying Questions from Data.'],
+  ['B24','2B11',5,'Evaluating data collected by others requires understanding measurement decisions: what was counted, by whom, with what tools, and for what purpose — now explicitly housed in Designing and Evaluating Measurements.'],
   ['B31','2B11',12,'Creating your own data (original data collection) is a form of measurement — the primary home in V2.'],
   ['B32','2B11',5,'Evaluating others\' collection methods requires understanding measurement decisions.'],
   ['B32','2A22',5,'Assessing existing datasets for relevance to a question lives in Identifying Questions from Data.'],
@@ -383,10 +379,10 @@ const RAW_LINKS = [
   ['D12','2D13',9,'Prior/update (Bayesian) logic is probability distribution reasoning — direct conceptual match.'],
   ['D13','2D33',6,'Expected value is a model parameter that must be interpreted in real-world context.'],
   ['D14','2E12',11,'Communicating statistical significance is characterizing the implications of findings — lives in the communication strand.'],
-  ['D15','2D23',7,'Simulation-based inference for distinguishing findings from chance is the subject of Building Simulations for Inference.'],
+  ['D15','2D23',7,'Simulation-based inference for distinguishing findings from chance is the subject of Modeling Using Simulation.'],
   ['D15','2D42',7,'Sampling logic informs the scope of what can be generalized — core to Evaluating Model Generalizability.'],
   ['D16','2D32',8,'Separating correlation from causation is the central task of Investigating Processes and Causal Relationships.'],
-  ['D17','2B21',3,'Randomization as a research design principle (random assignment) is the subject of Research Design.'],
+  ['D17','2B21',3,'Randomization as a research design principle (random assignment) is the subject of Investigation Design.'],
   ['D17','2D32',2,'Randomization as the gold standard for causal evidence connects to causal investigation.'],
   ['D18','2D21',5,'Multi-variable decision making using regression models is Building Models for Quantitative Outcomes.'],
   ['D18','2D33',5,'Interpreting multiple regression coefficients in context is Interpreting Model Parameters.'],
@@ -398,7 +394,7 @@ const RAW_LINKS = [
   ['D24','2E11',8,'Ensuring conclusions are relevant to the original question is the subject of Identifying Evidence Based Claims.'],
   ['D31','2D42',9,'Application fitness — whether findings generalize to new contexts — is Evaluating Model Generalizability.'],
   ['D32','2D42',3,'Sample-population reasoning defines the scope of what a model can generalize to.'],
-  ['D32','2D23',3,'Using samples in simulations is Building Simulations for Inference.'],
+  ['D32','2D23',3,'Using samples in simulations is Modeling Using Simulation.'],
   ['D33','2B12',4,'Sample size is a key consideration in designing sound sampling procedures.'],
   ['D33','2D23',4,'Sample size affects the reliability of simulation-based inference.'],
   ['D34','2B12',2,'Sample bias identification and mitigation is central to Evaluating and Designing Sampling Procedures.'],
@@ -446,7 +442,7 @@ RAW_LINKS.forEach(([s,t,c]) => {
 // ─── Layout ───────────────────────────────────────────────────────
 const BASE = 1.5;   // px per competency
 const PAD  = 4;     // gap between nodes
-const ML   = 175;   // left margin
+const ML   = 240;   // left margin
 const MR   = 260;   // right margin
 const MT   = 55;
 const COL_W = 10;
@@ -512,7 +508,7 @@ const hdr = (x, anchor, line1, line2) => {
     .attr('font-size',9).attr('fill','#7a8899').text(line2);
 };
 hdr(ML + COL_W/2, 'middle', 'Version 1  ·  83 concepts', '~699 competencies across K–12');
-hdr(ML+COL_W+MID+COL_W/2, 'middle', 'Version 2  ·  38 concepts', 'consolidated learning progressions');
+hdr(ML+COL_W+MID+COL_W/2, 'middle', 'Version 2  ·  37 concepts', 'reorganized learning progressions');
 
 // ─── Tooltip ──────────────────────────────────────────────────────
 const ttEl = document.getElementById('tt');
@@ -765,6 +761,67 @@ v2G.append('text')
   .attr('dominant-baseline','middle')
   .attr('font-size', 7.5).attr('fill','#c5cdd8')
   .text(n => n.name.length>44 ? n.name.slice(0,43)+'…' : n.name);
+
+// ─── Strand labels ────────────────────────────────────────────────
+const STRAND_FULL = {
+  A: 'Foundations of Data',
+  B: 'Creation and Curation',
+  C: 'Analysis and Exploration',
+  D: 'Sense Making with Models',
+  E: 'Interpretation and Communication'
+};
+
+function drawStrandLabels(nodes, positions, xLabel, side) {
+  ['A','B','C','D','E'].forEach(s => {
+    const sNodes = nodes.filter(n => n.strand === s);
+    if (!sNodes.length) return;
+    const first = positions[sNodes[0].id];
+    const last  = positions[sNodes[sNodes.length - 1].id];
+    const y0   = first.y0;
+    const y1   = last.y0 + last.h;
+    const yMid = (y0 + y1) / 2;
+    const color = SC[s];
+    const label = `${s}  ·  ${STRAND_FULL[s]}`;
+    const lx = xLabel + (side === 'left' ? 2 : -2);
+
+    // Bracket line
+    svg.append('line')
+      .attr('x1', lx).attr('x2', lx)
+      .attr('y1', y0 + 2).attr('y2', y1 - 2)
+      .attr('stroke', color).attr('stroke-opacity', 0.25)
+      .attr('stroke-width', 1.5).attr('stroke-linecap', 'round');
+
+    // Top tick
+    svg.append('line')
+      .attr('x1', xLabel).attr('x2', xLabel + (side === 'left' ? 4 : -4))
+      .attr('y1', y0 + 2).attr('y2', y0 + 2)
+      .attr('stroke', color).attr('stroke-opacity', 0.25).attr('stroke-width', 1.5);
+
+    // Bottom tick
+    svg.append('line')
+      .attr('x1', xLabel).attr('x2', xLabel + (side === 'left' ? 4 : -4))
+      .attr('y1', y1 - 2).attr('y2', y1 - 2)
+      .attr('stroke', color).attr('stroke-opacity', 0.25).attr('stroke-width', 1.5);
+
+    // Rotated label — placed inside the margin, between bracket and bars
+    const textX = xLabel + (side === 'left' ? 20 : -20);
+    const rot   = side === 'left' ? -90 : 90;
+    svg.append('text')
+      .attr('transform', `translate(${textX},${yMid}) rotate(${rot})`)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-family', "'DM Sans', sans-serif")
+      .attr('font-size', 8)
+      .attr('font-weight', 500)
+      .attr('letter-spacing', '0.06em')
+      .attr('fill', color)
+      .attr('fill-opacity', 0.65)
+      .text(label);
+  });
+}
+
+drawStrandLabels(V1, v1Pos, 10,          'left');
+drawStrandLabels(V2, v2Pos, totalW - 10, 'right');
 
 // ─── Click away resets ────────────────────────────────────────────
 svg.on('click', () => { bands.attr('fill-opacity', 0.2); });
