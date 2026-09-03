@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DS Learning Progressions · Concept Mapping V1 → V2</title>
+<title>DS Learning Progressions · V1 → V2 Concept Mapping</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
@@ -13,102 +13,74 @@
     --border: #252d3a; --border2: #2e3a4a;
     --text: #dde4ee; --muted: #7a8899; --dim: #3d4a5a;
     --a: #4d9de0; --b: #3dba70; --c: #e8b84b; --d: #e87040; --e: #a57de8;
-    --panel-w: 340px;
+    --new: #f87171;
+    --panel-w: 360px;
   }
   html { font-size: 13px; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-  /* ── Header ── */
   header { padding: 2rem 2.5rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
   .h-left h1 { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
   .h-left h1 em { font-style: italic; color: var(--muted); }
-  .h-left p { font-size: 0.78rem; color: var(--muted); max-width: 460px; line-height: 1.65; }
-  .stats { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; }
-  .stat { text-align: center; min-width: 60px; }
-  .stat-n { font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 600; line-height: 1; margin-bottom: 0.15rem; }
-  .stat-l { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; }
+  .h-left p { font-size: 0.78rem; color: var(--muted); max-width: 520px; line-height: 1.65; }
 
-  /* ── Controls ── */
   .controls { padding: 0.7rem 2.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; background: var(--surface); }
   .ctrl-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--dim); font-weight: 600; white-space: nowrap; }
   .fg { display: flex; gap: 0.3rem; align-items: center; }
   .fg + .fg { padding-left: 1rem; border-left: 1px solid var(--border); }
   .btn { padding: 0.25rem 0.65rem; border-radius: 3px; border: 1px solid var(--border2); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.14s; }
   .btn:hover { border-color: #4a5568; color: var(--text); }
-  .btn.aa  { border-color: var(--text);  color: var(--text);  background: rgba(255,255,255,0.06); }
-  .btn.ba  { border-color: var(--a); color: var(--a); background: rgba(77,157,224,0.12); }
-  .btn.bb  { border-color: var(--b); color: var(--b); background: rgba(61,186,112,0.12); }
-  .btn.bc  { border-color: var(--c); color: var(--c); background: rgba(232,184,75,0.12); }
-  .btn.bd  { border-color: var(--d); color: var(--d); background: rgba(232,112,64,0.12); }
-  .btn.be  { border-color: var(--e); color: var(--e); background: rgba(165,125,232,0.12); }
-  .btn.bs  { border-color: #f87171; color: #f87171; background: rgba(248,113,113,0.12); }
-  .btn.bm  { border-color: #60aff5; color: #60aff5; background: rgba(96,175,245,0.12); }
+  .btn.aa { border-color: var(--text); color: var(--text); background: rgba(255,255,255,0.06); }
+  .btn.ba { border-color: var(--a); color: var(--a); background: rgba(77,157,224,0.12); }
+  .btn.bb { border-color: var(--b); color: var(--b); background: rgba(61,186,112,0.12); }
+  .btn.bc { border-color: var(--c); color: var(--c); background: rgba(232,184,75,0.12); }
+  .btn.bd { border-color: var(--d); color: var(--d); background: rgba(232,112,64,0.12); }
+  .btn.be { border-color: var(--e); color: var(--e); background: rgba(165,125,232,0.12); }
+  .btn.bn { border-color: var(--new); color: var(--new); background: rgba(248,113,113,0.12); }
   .legend { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-left: auto; }
   .li { display: flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; color: var(--muted); }
   .ld { width: 7px; height: 7px; border-radius: 50%; }
 
-  /* ── Chart layout ── */
   .page-body { display: flex; min-height: calc(100vh - 160px); }
   .chart-wrap { flex: 1; overflow: auto; padding: 1rem 0 2rem; transition: margin-right 0.3s ease; }
   .chart-wrap.panel-open { margin-right: var(--panel-w); }
   svg { display: block; }
 
-  /* ── Drill-down panel ── */
-  .panel {
-    position: fixed; top: 0; right: calc(-1 * var(--panel-w)); width: var(--panel-w);
-    height: 100vh; background: var(--surface); border-left: 1px solid var(--border2);
-    z-index: 50; overflow-y: auto; transition: right 0.3s ease;
-    display: flex; flex-direction: column;
-  }
+  .panel { position: fixed; top: 0; right: calc(-1 * var(--panel-w)); width: var(--panel-w); height: 100vh; background: var(--surface); border-left: 1px solid var(--border2); z-index: 50; overflow-y: auto; transition: right 0.3s ease; display: flex; flex-direction: column; }
   .panel.open { right: 0; }
-  .panel-header {
-    padding: 1.2rem 1.2rem 0.8rem; border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem;
-    position: sticky; top: 0; background: var(--surface); z-index: 2;
-  }
+  .panel-header { padding: 1.2rem 1.2rem 0.8rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; position: sticky; top: 0; background: var(--surface); z-index: 2; }
   .panel-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 300; line-height: 1.3; color: var(--text); }
   .panel-close { background: none; border: 1px solid var(--border2); color: var(--muted); cursor: pointer; width: 24px; height: 24px; border-radius: 3px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.14s; }
   .panel-close:hover { border-color: #4a5568; color: var(--text); }
   .panel-body { padding: 1rem 1.2rem; flex: 1; }
-
   .p-concept { margin-bottom: 1.2rem; }
   .p-concept-code { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; margin-bottom: 0.25rem; }
   .p-concept-name { font-size: 0.85rem; font-weight: 500; color: var(--text); line-height: 1.35; margin-bottom: 0.4rem; }
   .p-comp-total { font-size: 0.72rem; color: var(--muted); }
   .p-comp-total strong { color: var(--text); }
-
-  /* Grade band mini bars */
   .grade-bars { display: flex; gap: 3px; margin-top: 0.45rem; align-items: flex-end; height: 28px; }
   .gb-col { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
-  .gb-bar { width: 100%; border-radius: 1px; min-height: 2px; transition: opacity 0.2s; }
+  .gb-bar { width: 100%; border-radius: 1px; min-height: 2px; }
   .gb-label { font-size: 0.56rem; color: var(--dim); font-family: 'DM Mono', monospace; white-space: nowrap; }
-
   .p-divider { height: 1px; background: var(--border); margin: 1rem 0; }
-
   .p-section-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 600; margin-bottom: 0.6rem; }
-
   .p-flow { margin-bottom: 0.7rem; padding: 0.65rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); }
   .p-flow-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; gap: 0.5rem; }
   .p-flow-code { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; }
-  .p-flow-badge { font-size: 0.62rem; font-family: 'DM Mono', monospace; padding: 0.1rem 0.35rem; border-radius: 2px; white-space: nowrap; }
-  .badge-comp { background: rgba(255,255,255,0.06); color: var(--muted); }
+  .p-flow-badge { font-size: 0.62rem; font-family: 'DM Mono', monospace; padding: 0.1rem 0.35rem; border-radius: 2px; white-space: nowrap; background: rgba(255,255,255,0.06); color: var(--muted); }
   .p-flow-name { font-size: 0.78rem; color: var(--text); line-height: 1.35; margin-bottom: 0.3rem; }
   .p-flow-rationale { font-size: 0.72rem; color: var(--muted); line-height: 1.55; font-style: italic; }
-
   .p-note { font-size: 0.68rem; color: var(--dim); line-height: 1.55; border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: 0.5rem; }
+  .new-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 3px; font-size: 0.65rem; font-weight: 600; background: rgba(248,113,113,0.15); color: #f87171; letter-spacing: 0.04em; font-family: 'DM Mono', monospace; }
 
-  /* ── Tooltip ── */
-  .tt { position: fixed; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 0.6rem 0.85rem; font-size: 0.75rem; line-height: 1.5; pointer-events: none; opacity: 0; transition: opacity 0.1s; max-width: 270px; z-index: 100; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+  .tt { position: fixed; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 0.6rem 0.85rem; font-size: 0.75rem; line-height: 1.5; pointer-events: none; opacity: 0; transition: opacity 0.1s; max-width: 280px; z-index: 100; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
   .tt.show { opacity: 1; }
   .tt-t { font-weight: 600; color: var(--text); font-size: 0.78rem; margin-bottom: 0.2rem; }
   .tt-b { color: var(--muted); }
-  .tt-tag { display: inline-block; margin-top: 0.3rem; padding: 0.08rem 0.35rem; border-radius: 2px; font-size: 0.63rem; font-family: 'DM Mono', monospace; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tt-tag { display: inline-block; margin-top: 0.3rem; padding: 0.08rem 0.35rem; border-radius: 2px; font-size: 0.63rem; font-family: 'DM Mono', monospace; font-weight: 500; letter-spacing: 0.04em; }
   .ts { background: rgba(248,113,113,0.18); color: #f87171; }
   .tm { background: rgba(96,175,245,0.18); color: #60aff5; }
-
-  /* click-highlight pulse */
-  @keyframes clickPulse { 0%{opacity:1} 50%{opacity:0.4} 100%{opacity:1} }
-  .clicked { animation: clickPulse 0.3s ease; }
+  .tnew { background: rgba(248,113,113,0.25); color: #fca5a5; }
 </style>
 </head>
 <body>
@@ -116,11 +88,10 @@
 <header>
   <div class="h-left">
     <h1>Concept Mapping <em>Version 1 → Version 2</em></h1>
-    <p>Band thickness reflects competency count flowing through each connection.
-       Click any bar or band to open the detail panel.
-       Hover to preview. Filter by strand or pattern.</p>
+    <p>Band thickness reflects competency count. V1 has 83 concepts; V2 consolidates to 43.
+       <span style="color:#f87171">Red "New in V2"</span> bucket on the left shows concepts with no V1 predecessor.
+       Click any bar or band to open the detail panel. Hover to preview.</p>
   </div>
-
 </header>
 
 <div class="controls">
@@ -132,11 +103,12 @@
     <button class="btn" data-f="C" data-c="c">C · Exploration</button>
     <button class="btn" data-f="D" data-c="d">D · Models</button>
     <button class="btn" data-f="E" data-c="e">E · Communication</button>
+    <button class="btn" data-f="NEW" data-c="n">New in V2</button>
   </div>
   <div class="fg">
     <span class="ctrl-lbl">Pattern</span>
     <button class="btn" data-f="splits">⚠ Splits</button>
-    <button class="btn" data-f="merges">Merges</button>
+    <button class="btn" data-f="merges">◎ Merges</button>
   </div>
   <div class="legend">
     <div class="li"><div class="ld" style="background:var(--a)"></div>A</div>
@@ -144,9 +116,10 @@
     <div class="li"><div class="ld" style="background:var(--c)"></div>C</div>
     <div class="li"><div class="ld" style="background:var(--d)"></div>D</div>
     <div class="li"><div class="ld" style="background:var(--e)"></div>E</div>
+    <div class="li"><div class="ld" style="background:var(--new)"></div>New</div>
     <div class="li" style="margin-left:0.5rem">
       <div style="width:20px;height:4px;background:rgba(255,255,255,0.3);border-radius:1px"></div>
-      band width = competency count
+      width = competency count
     </div>
   </div>
 </div>
@@ -161,17 +134,16 @@
     <div class="panel-body" id="panelBody"></div>
   </div>
 </div>
-
 <div class="tt" id="tt"></div>
 
 <script>
-const SC = { A:'#4d9de0', B:'#3dba70', C:'#e8b84b', D:'#e87040', E:'#a57de8' };
+const SC = { A:'#4d9de0', B:'#3dba70', C:'#e8b84b', D:'#e87040', E:'#a57de8', NEW:'#f87171' };
 const GB_LABELS = ['K–2','3–5','6–8','9–10','11–12'];
 
-// ─── V1 nodes ──────────────────────────────────────────────────────
+// ── V1 nodes ─────────────────────────────────────────────────────────────────
 const V1 = [
   {id:'A11',code:'A.1.1',name:'Data Types and Forms',strand:'A',comp:11,gb:[3,3,2,2,1]},
-  {id:'A12',code:'A.1.2',name:'Data are Produced by People',strand:'A',comp:10,gb:[1,2,3,2,2]},
+  {id:'A12',code:'A.1.2',name:'Data Are Produced by People',strand:'A',comp:10,gb:[1,2,3,2,2]},
   {id:'A13',code:'A.1.3',name:'Variability of Data',strand:'A',comp:6,gb:[1,2,1,1,1]},
   {id:'A14',code:'A.1.4',name:'Data Provides Partial Information',strand:'A',comp:6,gb:[1,1,2,1,1]},
   {id:'A15',code:'A.1.5',name:'Data and AI',strand:'A',comp:13,gb:[2,2,2,3,4]},
@@ -187,7 +159,7 @@ const V1 = [
   {id:'B12',code:'B.1.2',name:'Organizing and Structure',strand:'B',comp:12,gb:[3,1,2,3,3]},
   {id:'B13',code:'B.1.3',name:'Processing and Transformation',strand:'B',comp:9,gb:[2,1,2,2,2]},
   {id:'B14',code:'B.1.4',name:'Summarizing Groups',strand:'B',comp:6,gb:[1,2,1,1,1]},
-  {id:'B21',code:'B.2.1',name:'Designing Data-Based Investigations',strand:'B',comp:9,gb:[1,2,1,2,3]},
+  {id:'B21',code:'B.2.1',name:'Designing Investigations',strand:'B',comp:9,gb:[1,2,1,2,3]},
   {id:'B22',code:'B.2.2',name:'Data Creation Techniques',strand:'B',comp:14,gb:[1,3,2,5,3]},
   {id:'B23',code:'B.2.3',name:'Designing Data Collection Plans',strand:'B',comp:5,gb:[1,1,1,1,1]},
   {id:'B24',code:'B.2.4',name:'Finding Secondary Data',strand:'B',comp:14,gb:[2,2,3,3,4]},
@@ -225,7 +197,7 @@ const V1 = [
   {id:'D12',code:'D.1.2',name:'Priors and Updates',strand:'D',comp:9,gb:[1,1,2,2,3]},
   {id:'D13',code:'D.1.3',name:'Expected Value',strand:'D',comp:6,gb:[0,1,1,2,2]},
   {id:'D14',code:'D.1.4',name:'Explaining Significance',strand:'D',comp:11,gb:[0,1,3,3,4]},
-  {id:'D15',code:'D.1.5',name:'Sampling and Simulations',strand:'D',comp:14,gb:[2,2,4,3,3]},
+  {id:'D15',code:'D.1.5',name:'Sampling and Simulation',strand:'D',comp:14,gb:[2,2,4,3,3]},
   {id:'D16',code:'D.1.6',name:'Correlation vs. Causation',strand:'D',comp:8,gb:[0,2,2,2,2]},
   {id:'D17',code:'D.1.7',name:'Randomization',strand:'D',comp:5,gb:[0,1,1,1,2]},
   {id:'D18',code:'D.1.8',name:'Multi-Variable Decision Making',strand:'D',comp:10,gb:[0,1,3,2,4]},
@@ -253,181 +225,290 @@ const V1 = [
   {id:'E32',code:'E.3.2',name:'Advocacy with Data Arguments',strand:'E',comp:9,gb:[1,2,2,2,2]},
   {id:'E33',code:'E.3.3',name:'Civic Data Practices',strand:'E',comp:4,gb:[0,0,0,2,2]},
   {id:'E34',code:'E.3.4',name:'Impacts of Technology Use',strand:'E',comp:6,gb:[1,1,1,2,1]},
+  // Special "New in V2" source node
+  {id:'NEW',code:'NEW',name:'New in V2',strand:'NEW',comp:0,gb:[0,0,0,0,0]},
 ];
 
-// ─── V2 nodes ──────────────────────────────────────────────────────
+// ── V2 nodes ─────────────────────────────────────────────────────────────────
 const V2 = [
-  {id:'2A11',code:'A.1.1',name:'Understanding Variation Through Data Investigation',strand:'A'},
-  {id:'2A13',code:'A.1.2',name:'Cultivating a Questioning Disposition',strand:'A'},
-  {id:'2A14',code:'A.1.3',name:'Embracing Iteration in the Data Investigation Process',strand:'A'},
-  {id:'2A12',code:'A.2.1',name:'Recognizing Data in All of its Forms',strand:'A'},
-  {id:'2A15',code:'A.2.2',name:'Recognizing the Power and Responsibility of Data',strand:'A'},
-  {id:'2A21',code:'A.3.1',name:'Formulating Investigatable Questions',strand:'A'},
-  {id:'2A22',code:'A.3.2',name:'Identifying Questions from Data',strand:'A'},
-  {id:'2B11',code:'B.1.1',name:'Designing and Evaluating Measurements',strand:'B'},
-  {id:'2B12',code:'B.2.1',name:'Evaluating and Designing Sampling Procedures',strand:'B'},
-  {id:'2B21',code:'B.2.2',name:'Investigation Design',strand:'B'},
-  {id:'2B22',code:'B.3.1',name:'Ethics in Data Collection/Production and Use',strand:'B'},
-  {id:'2B31',code:'B.4.1',name:'Organizing Data',strand:'B'},
-  {id:'2B32',code:'B.4.2',name:'Data Cleaning',strand:'B'},
-  {id:'2B33',code:'B.4.3',name:'Processing Data',strand:'B'},
-  {id:'2C11',code:'C.1.1',name:'Describing and Visualizing Single Variable Distributions',strand:'C'},
-  {id:'2C21',code:'C.2.1',name:'Describing and Visualizing Multivariate Relationships',strand:'C'},
-  {id:'2C31',code:'C.3.1',name:'Using Technology for Data Exploration',strand:'C'},
-  {id:'2C32',code:'C.3.2',name:'Investigating Questions about Single Variables',strand:'C'},
-  {id:'2C33',code:'C.3.3',name:'Investigating Questions about Multiple Variables',strand:'C'},
-  {id:'2D11',code:'D.1.1',name:'Models as Approximations',strand:'D'},
-  {id:'2D12',code:'D.1.2',name:'Models as Mathematical Relationships',strand:'D'},
-  {id:'2D13',code:'D.1.3',name:'Probability Distributions as Models',strand:'D'},
-  {id:'2D21',code:'D.2.1',name:'Building Models for Quantitative Outcomes',strand:'D'},
-  {id:'2D22',code:'D.2.2',name:'Building Models for Categorical Outcomes',strand:'D'},
-  {id:'2D23',code:'D.2.3',name:'Modeling Using Simulation',strand:'D'},
-  {id:'2D31',code:'D.3.1',name:'Making Predictions with Models',strand:'D'},
-  {id:'2D32',code:'D.3.2',name:'Investigating Processes and Causal Relationships',strand:'D'},
-  {id:'2D33',code:'D.3.3',name:'Interpret Model Parameters in Context',strand:'D'},
-  {id:'2D41',code:'D.4.1',name:'Quantifying Model Error',strand:'D'},
-  {id:'2D42',code:'D.4.2',name:'Evaluating Model Generalizability',strand:'D'},
-  {id:'2D43',code:'D.4.3',name:'Comparing and Improving Models',strand:'D'},
-  {id:'2E11',code:'E.1.1',name:'Identifying Evidence Based Claims',strand:'E'},
-  {id:'2E12',code:'E.1.2',name:'Characterizing Significance and Implications',strand:'E'},
-  {id:'2E13',code:'E.1.3',name:'Designing Claim Supportive Visualizations',strand:'E'},
-  {id:'2E21',code:'E.2.1',name:'Communicate with Completeness and Clarity',strand:'E'},
-  {id:'2E22',code:'E.2.2',name:'Creating Reproducible Documentation',strand:'E'},
-  {id:'2E23',code:'E.2.3',name:'Recognizing Misleading Communication',strand:'E'},
+  // Strand A
+  {id:'2A11',code:'A.1.1',name:'Recognizing Data in All of Its Forms',strand:'A',comp:8,gb:[2,2,2,1,1]},
+  {id:'2A12',code:'A.1.2',name:'The Power and Responsibility of Data',strand:'A',comp:17,gb:[2,4,4,4,3]},
+  {id:'2A13',code:'A.1.3',name:'Data, Computing, and AI Systems',strand:'A',comp:14,gb:[1,2,4,4,3]},
+  {id:'2A21',code:'A.2.1',name:'Cultivating a Questioning Curiosity',strand:'A',comp:8,gb:[2,1,1,2,2]},
+  {id:'2A22',code:'A.2.2',name:'Agency and Action with Data',strand:'A',comp:5,gb:[1,1,1,1,1]},
+  {id:'2A31',code:'A.3.1',name:'A Skeptical, Evidence-Seeking Stance',strand:'A',comp:9,gb:[2,1,2,2,2]},
+  {id:'2A32',code:'A.3.2',name:'Questioning What a Claim Really Shows',strand:'A',comp:11,gb:[1,2,2,3,3]},
+  {id:'2A41',code:'A.4.1',name:'The Phases of the Data Investigation Cycle',strand:'A',comp:5,gb:[1,1,1,1,1]},
+  {id:'2A42',code:'A.4.2',name:'Forming Investigatable Questions',strand:'A',comp:10,gb:[2,2,2,2,2]},
+  {id:'2A43',code:'A.4.3',name:'Iterating as Evidence Emerges',strand:'A',comp:14,gb:[3,3,3,3,2]},
+  // Strand B
+  {id:'2B11',code:'B.1.1',name:'Defining What to Measure',strand:'B',comp:11,gb:[3,2,2,2,2]},
+  {id:'2B12',code:'B.1.2',name:'Evaluating Measurement Quality',strand:'B',comp:6,gb:[1,1,1,1,2]},
+  {id:'2B21',code:'B.2.1',name:'Evaluating and Designing Sampling Procedures',strand:'B',comp:15,gb:[1,3,4,5,2]},
+  {id:'2B22',code:'B.2.2',name:'Investigation Design',strand:'B',comp:8,gb:[1,2,2,2,1]},
+  {id:'2B23',code:'B.2.3',name:'Gathering and Evaluating Secondary Data',strand:'B',comp:11,gb:[1,2,3,4,1]},
+  {id:'2B31',code:'B.3.1',name:'Privacy, Consent, and Representation',strand:'B',comp:10,gb:[1,1,3,3,2]},
+  {id:'2B32',code:'B.3.2',name:'Harm, Accountability, and Societal Footprint',strand:'B',comp:5,gb:[0,1,1,2,1]},
+  {id:'2B41',code:'B.4.1',name:'Organizing Data',strand:'B',comp:15,gb:[2,4,4,3,2]},
+  {id:'2B42',code:'B.4.2',name:'Data Cleaning',strand:'B',comp:13,gb:[2,3,4,2,2]},
+  {id:'2B43',code:'B.4.3',name:'Processing Data',strand:'B',comp:13,gb:[0,4,4,3,2]},
+  // Strand C
+  {id:'2C11',code:'C.1.1',name:'Recognizing Variation is Everywhere',strand:'C',comp:5,gb:[1,1,1,1,1]},
+  {id:'2C12',code:'C.1.2',name:'Exploring Data to Generate Questions',strand:'C',comp:6,gb:[1,2,1,1,1]},
+  {id:'2C21',code:'C.2.1',name:'Visualizing Single Variables',strand:'C',comp:9,gb:[2,2,2,2,1]},
+  {id:'2C22',code:'C.2.2',name:'Visualizing Relationships Among Variables',strand:'C',comp:20,gb:[2,4,5,4,5]},
+  {id:'2C31',code:'C.3.1',name:'Summarizing Single Variables',strand:'C',comp:15,gb:[3,3,4,3,2]},
+  {id:'2C32',code:'C.3.2',name:'Summarizing Relationships Among Variables',strand:'C',comp:26,gb:[2,5,6,6,7]},
+  {id:'2C41',code:'C.4.1',name:'Sources of Variability',strand:'C',comp:8,gb:[1,2,2,2,1]},
+  {id:'2C42',code:'C.4.2',name:'Signal, Noise, and Reasoning Beyond the Data',strand:'C',comp:8,gb:[1,2,2,2,1]},
+  // Strand D
+  {id:'2D11',code:'D.1.1',name:'Understanding and Selecting Models',strand:'D',comp:10,gb:[3,1,3,2,1]},
+  {id:'2D12',code:'D.1.2',name:'Building Models for Outcomes',strand:'D',comp:15,gb:[3,3,3,3,3]},
+  {id:'2D13',code:'D.1.3',name:'Representing Uncertainty with Probability',strand:'D',comp:12,gb:[1,2,4,3,2]},
+  {id:'2D21',code:'D.2.1',name:'Predicting New Cases',strand:'D',comp:10,gb:[1,2,2,3,2]},
+  {id:'2D22',code:'D.2.2',name:'Reasoning Beyond the Data',strand:'D',comp:6,gb:[1,1,1,1,2]},
+  {id:'2D31',code:'D.3.1',name:'Quantifying Error and Comparing Models',strand:'D',comp:12,gb:[1,2,2,3,4]},
+  {id:'2D32',code:'D.3.2',name:'Weighing Evidence and Causal Claims',strand:'D',comp:6,gb:[0,1,2,2,1]},
+  {id:'2D33',code:'D.3.3',name:'Refining and Updating Models',strand:'D',comp:9,gb:[1,2,2,2,2]},
+  // Strand E
+  {id:'2E11',code:'E.1.1',name:'Interpreting Results in Context',strand:'E',comp:14,gb:[2,3,3,3,3]},
+  {id:'2E12',code:'E.1.2',name:'Characterizing Significance and Implications',strand:'E',comp:14,gb:[1,3,4,3,3]},
+  {id:'2E13',code:'E.1.3',name:'Evaluating Claims and Evidence',strand:'E',comp:7,gb:[1,1,2,1,2]},
+  {id:'2E21',code:'E.2.1',name:'Communicating with Completeness and Accuracy',strand:'E',comp:11,gb:[2,2,2,3,2]},
+  {id:'2E22',code:'E.2.2',name:'Communicating for Audience & Visualization Design',strand:'E',comp:16,gb:[2,3,4,3,4]},
+  {id:'2E23',code:'E.2.3',name:'Justifying and Communicating Analytical Decisions',strand:'E',comp:7,gb:[1,1,1,2,2]},
+  {id:'2E24',code:'E.2.4',name:'Reading and Critically Evaluating Data Communication',strand:'E',comp:15,gb:[2,4,4,3,2]},
 ];
 
-// ─── Links: [v1id, v2id, competencyCount, rationale] ──────────────
+// ── Links: [v1id, v2id, comp, rationale] ─────────────────────────────────────
+// Derived from the competency-level V1 CONCEPT column mapping in the final spreadsheet
 const RAW_LINKS = [
-  ['A11','2A12',6,'Non-traditional data types and forms (photos, text, audio) consolidate here; the data-type taxonomy is the core of this V2 concept.'],
-  ['A11','2A11',5,'The variability framing of data types — that different forms capture different aspects of variation — connects to the foundational variation concept.'],
-  ['A12','2B11',10,'Human decision-making in measurement (who measures, what tools, what purpose) is now the definitional core of the Measurements concept.'],
-  ['A13','2A11',6,'Variability of data is the direct conceptual parent of Understanding Variation; this is essentially a rename and expansion.'],
-  ['A14','2D11',6,'Data incompleteness ("all models are wrong") is now framed under Models as Approximations, giving it a modeling-theory home.'],
-  ['A15','2D12',13,'AI-as-function-machine framing (inputs, outputs, weights) is now the structural definition of Models as Mathematical Relationships.'],
-  ['A21','2A15',10,'Risks and benefits of data use are consolidated into the power and responsibility framing — the most direct home for this content.'],
-  ['A22','2A15',3,'Bias awareness as a dimension of responsible data use consolidates into the power/responsibility concept.'],
-  ['A22','2B22',3,'Harmful bias practices in data collection are ethical dimensions addressed in Ethics in Data Collection.'],
-  ['A22','2B12',2,'Sampling design as a mechanism for mitigating collection bias now lives in the sampling procedures concept.'],
-  ['A23','2A15',4,'Data as an instrument of advocacy and discovery is the defining argument of Power and Responsibility.'],
-  ['A23','2A13',3,"The questioning disposition is itself an expression of engaging with data's power — civic curiosity."],
-  ['A31','2A11',3,'The investigative process generates understanding of variation; both concepts describe how people engage with data to make sense of the world.'],
-  ['A31','2A14',3,'The iterative, cyclical nature of investigation is the structural heart of Embracing Iteration.'],
-  ['A32','2A14',5,'Iteration is renamed and expanded here; content maps directly.'],
-  ['A33','2A14',2,'Dynamic inferences evolve through the iterative process — new data prompts revision, which is iteration in action.'],
-  ['A33','2A11',1,'Updating understanding as evidence accumulates is how variation understanding develops.'],
-  ['A33','2E11',2,'Drawing informal inferences — using data as evidence to reach conclusions that extend beyond the immediate dataset — is now explicitly named and taught in Identifying Evidence Based Claims.'],
-  ['A34','2C32',4,'Context-sensitive interpretation of single-variable findings is central to Investigating Questions about Single Variables.'],
-  ['A34','2C33',3,'Context-sensitive interpretation across multiple variables lives in the multi-variable investigation concept.'],
-  ['A35','2A13',8,'Student data agency is fully expressed through the questioning disposition — curiosity, autonomy, and personal inquiry.'],
-  ['B11','2B32',9,'Data Cleaning content maps directly to the renamed and reorganized Data Cleaning concept.'],
-  ['B12','2B31',12,'Organizing and Structure is now Organizing Data — direct content match.'],
-  ['B13','2B33',9,'Processing and Transformation maps directly to Processing Data.'],
-  ['B14','2B33',3,'Summarizing groups is a processing operation — creating aggregate variables from raw data.'],
-  ['B14','2C33',3,'Group-level summaries feed directly into investigating multi-variable questions.'],
-  ['B21','2A21',9,'Designing data-based investigations is the procedural side of Formulating Investigatable Questions.'],
-  ['B22','2B11',14,'Simulation and sensor-based data generation is a form of measurement — now consolidated under Measurements.'],
-  ['B23','2B12',5,'Collection planning is central to designing sound sampling procedures.'],
-  ['B24','2A22',9,'Finding and evaluating existing datasets — including examining provenance, relevance, and what questions the data can and cannot answer — is a core activity of Identifying Questions from Data.'],
-  ['B24','2B11',5,'Evaluating data collected by others requires understanding measurement decisions: what was counted, by whom, with what tools, and for what purpose — now explicitly housed in Designing and Evaluating Measurements.'],
-  ['B31','2B11',12,'Creating your own data (original data collection) is a form of measurement — the primary home in V2.'],
-  ['B32','2B11',5,'Evaluating others\' collection methods requires understanding measurement decisions.'],
-  ['B32','2A22',5,'Assessing existing datasets for relevance to a question lives in Identifying Questions from Data.'],
-  ['B33','2B22',10,'Ethics in data collection maps directly here — clearest content match.'],
-  ['B41','2B32',10,'Dataset cleanliness levels and quality issues map directly to Data Cleaning.'],
-  ['B42','2B31',6,'Variable type complexity informs how data should be organized and structured.'],
-  ['B42','2B33',6,'Variable transformation (e.g., binning, recoding) is a processing task.'],
-  ['B43','2B31',9,'Dataset size considerations affect organizational choices.'],
-  ['B44','2B31',7,'Complex nested or hierarchical structures require advanced organizing strategies.'],
-  ['B44','2B33',7,'Structural transformation (wide/long format, joins) is a processing operation.'],
-  ['C11','2C11',8,'Measures of center are a core component of single variable distribution description — direct match.'],
-  ['C12','2C11',6,'Measures of spread are a core component of single variable distribution description.'],
-  ['C13','2C11',6,'Shape (skewness, modes, gaps) is a core component of distribution description.'],
-  ['C14','2C11',5,'Frequency tables are the tabular tool for describing single variable distributions.'],
-  ['C15','2B32',6,'Missing data identification and handling is a data cleaning task — now consolidated there.'],
-  ['C16','2B31',5,'Metadata is part of data organization documentation — lives in Organizing Data.'],
-  ['C21','2C33',5,'Comparing variables is the defining activity of investigating multi-variable questions.'],
-  ['C22','2C11',5,'Distribution understanding provides the foundation for single variable analysis.'],
-  ['C22','2C33',4,'Distributions also enable group comparisons in multi-variable investigations.'],
-  ['C23','2C21',6,'Defining relationships between variables is the core of Describing Multivariate Relationships.'],
-  ['C23','2D32',5,'Defining relationships is a precursor to investigating causal processes.'],
-  ['C24','2A12',5,'Non-traditional data types (text, audio, sensor) are recognized in Recognizing Data in All Forms.'],
-  ['C24','2C21',5,'Visualizing and analyzing non-traditional data is a multivariate relationship activity.'],
-  ['C25','2D12',2,'ML as mathematical relationships (inputs/outputs/weights) is the definitional frame of Models as Mathematical Relationships.'],
-  ['C25','2D21',1,'Building quantitative prediction models (e.g., regression, decision trees) is covered here.'],
-  ['C25','2D22',1,'Building categorical classification models (e.g., decision trees, classifiers) is covered here.'],
-  ['C31','2C11',4,'Describing variability uses the same distributional tools as single variable description.'],
-  ['C31','2A11',4,'Understanding sources of variability is foundational to understanding variation in data.'],
-  ['C32','2C33',3,'Comparing variability across groups is a multi-variable investigation question.'],
-  ['C32','2C11',2,'Comparing variability builds on single variable distribution tools.'],
-  ['C33','2A11',6,'Understanding sources of variability is the conceptual core of the variation-understanding foundation.'],
-  ['C33','2D41',5,'Measurement error as a source of variability is now framed as a component of model error quantification.'],
-  ['C34','2D12',2,'AI output variability is understood through the mathematical model frame (inputs, outputs, weights).'],
-  ['C34','2B22',2,'Bias and ethical dimensions of AI tool variability live in Ethics in Data Collection and Use.'],
-  ['C41','2C31',9,'Tool application skills consolidate into Using Technology for Data Exploration.'],
-  ['C42','2B22',2,'Tool ethics (privacy, bias, AI limitations) are ethical dimensions of data collection and use.'],
-  ['C42','2A15',1,'Broader societal power of tools connects to Power and Responsibility of Data.'],
-  ['C43','2C31',2,'Tool evaluation is a component of technology exploration capability.'],
-  ['C44','2C31',5,'Tool selection judgment is part of using technology for exploration.'],
-  ['C45','2C31',3,'Code as automation tool for data exploration lives here.'],
-  ['C45','2E22',3,'Code enables reproducible, documented analysis — core to Creating Reproducible Documentation.'],
-  ['C46','2C31',9,'Accessibility is a dimension of inclusive technology for data exploration.'],
-  ['C51','2D11',7,'Understanding modeling as simplification ("all models are wrong") is the definition of Models as Approximations.'],
-  ['C51','2D32',7,'Understanding how models relate to causal processes connects to Investigating Processes and Causal Relationships.'],
-  ['C52','2D21',7,'Creating quantitative prediction models is the subject of Building Models for Quantitative Outcomes.'],
-  ['C52','2D22',7,'Creating categorical prediction models is the subject of Building Models for Categorical Outcomes.'],
-  ['D11','2D13',5,'Probabilistic language describes uncertainty in distributions — now framed directly through Probability Distributions as Models.'],
-  ['D12','2D13',9,'Prior/update (Bayesian) logic is probability distribution reasoning — direct conceptual match.'],
-  ['D13','2D33',6,'Expected value is a model parameter that must be interpreted in real-world context.'],
-  ['D14','2E12',11,'Communicating statistical significance is characterizing the implications of findings — lives in the communication strand.'],
-  ['D15','2D23',7,'Simulation-based inference for distinguishing findings from chance is the subject of Modeling Using Simulation.'],
-  ['D15','2D42',7,'Sampling logic informs the scope of what can be generalized — core to Evaluating Model Generalizability.'],
-  ['D16','2D32',8,'Separating correlation from causation is the central task of Investigating Processes and Causal Relationships.'],
-  ['D17','2B21',3,'Randomization as a research design principle (random assignment) is the subject of Investigation Design.'],
-  ['D17','2D32',2,'Randomization as the gold standard for causal evidence connects to causal investigation.'],
-  ['D18','2D21',5,'Multi-variable decision making using regression models is Building Models for Quantitative Outcomes.'],
-  ['D18','2D33',5,'Interpreting multiple regression coefficients in context is Interpreting Model Parameters.'],
-  ['D21','2A21',11,'Verifiable, hypothesis-based questions are the definitional content of Formulating Investigatable Questions.'],
-  ['D22','2A14',5,'Iteration and validation are the process components of Embracing Iteration.'],
-  ['D22','2D43',4,'Model comparison through validation is Comparing and Improving Models.'],
-  ['D23','2E12',2,'Uncertainty statements are how significance and implications are characterized in communication.'],
-  ['D23','2D42',2,'Stating limitations is a form of evaluating what the model can generalize to.'],
-  ['D24','2E11',8,'Ensuring conclusions are relevant to the original question is the subject of Identifying Evidence Based Claims.'],
-  ['D31','2D42',9,'Application fitness — whether findings generalize to new contexts — is Evaluating Model Generalizability.'],
-  ['D32','2D42',3,'Sample-population reasoning defines the scope of what a model can generalize to.'],
-  ['D32','2D23',3,'Using samples in simulations is Modeling Using Simulation.'],
-  ['D33','2B12',4,'Sample size is a key consideration in designing sound sampling procedures.'],
-  ['D33','2D23',4,'Sample size affects the reliability of simulation-based inference.'],
-  ['D34','2B12',2,'Sample bias identification and mitigation is central to Evaluating and Designing Sampling Procedures.'],
-  ['D34','2B22',2,'Sample bias as a form of unfair representation is an ethical dimension of data collection.'],
-  ['D35','2D42',5,'Extension statements are arguments about generalizability — exactly what Evaluating Model Generalizability addresses.'],
-  ['D36','2C33',3,'Subset effects and Simpson\'s Paradox are discoverable when investigating multi-variable questions.'],
-  ['D36','2D42',2,'Simpson\'s Paradox limits the generalizability of aggregate findings — a generalizability issue.'],
-  ['D37','2D43',3,'Meta-analysis as study validation connects to Comparing and Improving Models across studies.'],
-  ['D37','2E22',3,'Reproducible documentation is a prerequisite for study replication and meta-analysis.'],
-  ['E11','2C21',6,'Sense-making visualizations are the exploratory tool for multivariate relationship description.'],
-  ['E11','2E13',5,'Claim-supportive visualization design draws on the sense-making skills developed here.'],
-  ['E12','2E13',5,'Investigative visualizations directly serve claim-making — they are the evidential backbone of claims.'],
-  ['E12','2C11',5,'Single variable distribution investigation uses and produces visualizations.'],
-  ['E13','2C21',6,'Clear design principles apply directly to multivariate relationship displays.'],
-  ['E13','2E13',5,'Clear design for user interpretation is the core of Designing Claim Supportive Visualizations.'],
-  ['E14','2C21',12,'Graphical literacy is required for reading and interpreting multivariate visualizations.'],
-  ['E15','2C21',5,'Representational fluency in choosing multivariate display types lives here.'],
-  ['E15','2E23',4,'Scale and layout choices — and how they can mislead — are central to Recognizing Misleading Communication.'],
-  ['E16','2C21',6,'Matching visual type to data type is a multivariate visualization skill.'],
-  ['E21','2E21',8,'Connecting narratives to visualizations is communicating with completeness and clarity.'],
-  ['E22','2E21',16,'Writing data stories is the primary activity of Communicate with Completeness and Clarity.'],
-  ['E23','2E21',9,'Adapting narratives for audiences is a key dimension of clear communication.'],
-  ['E31','2E23',7,'Interrogating author intent is the analytical core of Recognizing Misleading Communication.'],
-  ['E31','2E21',6,'Transparent authorship and clear source attribution support complete, credible communication.'],
-  ['E32','2A15',5,'Advocacy with data is a direct expression of data\'s power to drive change — Power and Responsibility.'],
-  ['E32','2E21',4,'Advocacy data communication requires the completeness and clarity skills developed here.'],
-  ['E33','2A13',2,'Civic data practices cultivate the habit of questioning — a questioning disposition applied to civic life.'],
-  ['E33','2A15',2,'Civic engagement with data reflects data\'s power and responsibility in democratic contexts.'],
-  ['E34','2B22',3,'Environmental and human costs of technology are ethical dimensions of data collection and use.'],
-  ['E34','2A15',3,'Societal impacts of data-driven technology are central to Power and Responsibility of Data.'],
+  // A.1.1 → V2
+  ['A11','2A11', 8,'Data types and forms — recognizing categorical, numeric, non-traditional data — maps directly to Recognizing Data in All of Its Forms.'],
+  // A.1.2 → V2 (Data Are Produced by People splits across Power/Responsibility, Questioning Curiosity, Skeptical Stance)
+  ['A12','2A12', 4,'Human decision-making in data production (who decides what to measure, why) is central to the Power and Responsibility framing.'],
+  ['A12','2A21', 3,'Asking questions about how data were collected is the foundation of a questioning curiosity disposition.'],
+  ['A12','2A31', 3,'Recognizing limits of data and approaching claims skeptically maps to A Skeptical Evidence-Seeking Stance.'],
+  // A.1.3 → Variability of Data → C.1.1 and C.4.1
+  ['A13','2C11', 4,'Recognizing that data varies — foundational variability concept — lives in Recognizing Variation is Everywhere.'],
+  ['A13','2C41', 2,'Understanding natural, measurement, and sampling variability maps to Sources of Variability.'],
+  // A.1.4 → Skeptical Stance
+  ['A14','2A31', 6,'Data provides partial information; evaluating what data can and cannot show is central to the skeptical, evidence-seeking disposition.'],
+  // A.1.5 → AI / Data and Computing
+  ['A15','2A13',13,'Data and AI content maps entirely to Data, Computing, and AI Systems — direct structural match.'],
+  // A.2.1 → Power and Responsibility (risks/benefits) + B.3.1 (privacy)
+  ['A21','2A12', 7,'Data use risks and benefits — including privacy and unintended consequences — anchor in Power and Responsibility of Data.'],
+  ['A21','2B31', 3,'Privacy and consent aspects of data risk directly feed Privacy, Consent, and Representation.'],
+  // A.2.2 → Power/Responsibility + B.3.1
+  ['A22','2A12', 5,'Bias in data as an ethical and epistemic dimension maps into Power and Responsibility.'],
+  ['A22','2B31', 3,'Harmful bias in data collection is a privacy and representation issue addressed in B.3.1.'],
+  // A.2.3 → Power/Responsibility + Agency
+  ['A23','2A12', 4,'Data as a tool for discovery and advocacy is the defining content of Power and Responsibility.'],
+  ['A23','2A22', 3,'Using data to take action and challenge inequities maps to Agency and Action with Data.'],
+  // A.3.1 → Investigative Process → A.4.1
+  ['A31','2A41', 6,'The Investigative Process maps directly to The Phases of the Data Investigation Cycle.'],
+  // A.3.2 → Iteration → A.4.3
+  ['A32','2A43', 5,'Iteration maps directly and fully to Iterating as Evidence Emerges.'],
+  // A.3.3 → Dynamic Inferences → A.4.3 (iteration) + E.1.3 (evaluating claims)
+  ['A33','2A43', 3,'Dynamic inference — updating conclusions as data arrives — is the core of Iterating as Evidence Emerges.'],
+  ['A33','2E13', 2,'Evaluating and revising claims when new evidence arrives is Evaluating Claims and Evidence.'],
+  // A.3.4 → Apply Context → A.3.2 (questioning claims) + C.3.2 (multivariate)
+  ['A34','2A32', 4,'Applying contextual and disciplinary frames to interrogate what a claim shows maps to Questioning What a Claim Really Shows.'],
+  ['A34','2C32', 3,'Context-sensitive interpretation of multi-variable summaries is at home in Summarizing Relationships Among Variables.'],
+  // A.3.5 → Student Data Agency → A.2.1 (curiosity) + A.2.2 (agency)
+  ['A35','2A21', 5,'Student data agency — autonomous curiosity and personal inquiry — maps to Cultivating a Questioning Curiosity.'],
+  ['A35','2A22', 3,"Using data to take action in one's own life maps to Agency and Action with Data."],
+  // B.1.1 → Data Cleaning → B.4.2
+  ['B11','2B42', 9,'Data Cleaning content maps directly to the V2 Data Cleaning concept.'],
+  // B.1.2 → Organizing → B.4.1
+  ['B12','2B41',12,'Organizing and Structure maps directly to Organizing Data.'],
+  // B.1.3 → Processing → B.4.3
+  ['B13','2B43', 9,'Processing and Transformation maps directly to Processing Data.'],
+  // B.1.4 → Summarizing Groups → B.4.3 (processing) + C.3.2 (summarizing relationships)
+  ['B14','2B43', 3,'Creating group-level summary variables is a data processing operation.'],
+  ['B14','2C32', 3,'Group-level summaries feed directly into investigating multivariate questions.'],
+  // B.2.1 → Designing Investigations → A.4.2 + B.2.2
+  ['B21','2A42', 6,'Designing data-based investigations is the procedural side of Forming Investigatable Questions.'],
+  ['B21','2B22', 3,'Study design decisions (experimental vs. observational) belong in Investigation Design.'],
+  // B.2.2 → Data Creation Techniques → B.1.1 (measurement) + B.2.2 (design)
+  ['B22','2B11', 9,'Simulation and sensor-based generation are forms of measurement — consolidated under Defining What to Measure.'],
+  ['B22','2B22', 5,'The design of sensor experiments and automated collection belongs in Investigation Design.'],
+  // B.2.3 → Collection Plans → B.2.1 (sampling)
+  ['B23','2B21', 5,'Data collection planning is central to designing sound sampling procedures.'],
+  // B.2.4 → Secondary Data → B.2.3 + B.1.2 (measurement quality)
+  ['B24','2B23',10,'Finding secondary data maps directly to Gathering and Evaluating Secondary Data.'],
+  ['B24','2B12', 4,'Evaluating others\' data requires understanding measurement decisions — housed in Evaluating Measurement Quality.'],
+  // B.3.1 → Creating Own Data → B.1.1 + B.1.2
+  ['B31','2B11', 8,'Original data collection is a form of measurement — primary home in Defining What to Measure.'],
+  ['B31','2B12', 4,'Measurement quality (precision, validity, reliability) is directly in Evaluating Measurement Quality.'],
+  // B.3.2 → Working with Others' Data → B.2.3 + B.1.2
+  ['B32','2B23', 5,'Evaluating secondary datasets — provenance, who collected it, for what purpose — lives in Gathering and Evaluating Secondary Data.'],
+  ['B32','2B12', 5,'Assessing how others measured their data belongs in Evaluating Measurement Quality.'],
+  // B.3.3 → Ethics → B.3.1 (privacy) + B.3.2 (harm/accountability)
+  ['B33','2B31', 7,'Privacy, consent, and fair representation are the primary ethics content in B.3.1.'],
+  ['B33','2B32', 3,'Harm, accountability, and societal impacts of data systems map to B.3.2.'],
+  // B.4.1 → Cleanliness → B.4.2
+  ['B41','2B42',10,'Dataset cleanliness levels and quality issues map to Data Cleaning.'],
+  // B.4.2 → Complexity of Variables → B.4.1 (organizing) + B.4.3 (processing)
+  ['B42','2B41', 6,'Variable type complexity informs organizational choices — belongs in Organizing Data.'],
+  ['B42','2B43', 6,'Variable transformation (binning, recoding, derived variables) is a processing task.'],
+  // B.4.3 → Size → B.4.1
+  ['B43','2B41', 9,'Dataset size considerations affect how data is organized and structured.'],
+  // B.4.4 → Complexity of Structure → B.4.1 + B.4.3
+  ['B44','2B41', 7,'Complex nested/hierarchical structures are an organizational challenge.'],
+  ['B44','2B43', 7,'Wide/long format transformation and joins are processing operations.'],
+  // C.1.1 → Measures of Center → C.3.1
+  ['C11','2C31', 8,'Measures of center are core to Summarizing Single Variables.'],
+  // C.1.2 → Measures of Spread → C.3.1
+  ['C12','2C31', 6,'Measures of spread are core to Summarizing Single Variables.'],
+  // C.1.3 → Shape → C.3.1
+  ['C13','2C31', 6,'Shape description is core to Summarizing Single Variables.'],
+  // C.1.4 → Frequency Tables → C.3.1 + C.3.2
+  ['C14','2C31', 3,'Frequency tables describe single variable distributions.'],
+  ['C14','2C32', 2,'Relative frequency tables are used to examine two-variable categorical associations.'],
+  // C.1.5 → Missingness → B.4.2
+  ['C15','2B42', 6,'Missing data identification and handling is a data cleaning task.'],
+  // C.1.6 → Metadata → B.4.1
+  ['C16','2B41', 5,'Metadata is part of data organization documentation.'],
+  // C.2.1 → Comparing Variables → C.3.2
+  ['C21','2C32', 5,'Comparing variables is the core activity of Summarizing Relationships Among Variables.'],
+  // C.2.2 → Distributions → C.2.1 (viz single) + C.3.1 (summarizing)
+  ['C22','2C21', 5,'Distribution visualization tools belong in Visualizing Single Variables.'],
+  ['C22','2C31', 4,'Distribution summary measures belong in Summarizing Single Variables.'],
+  // C.2.3 → Defining Relationships → C.2.2 (viz multivariate) + C.3.2
+  ['C23','2C22', 6,'Visualizing relationships (scatterplots, time series, maps) belongs in Visualizing Relationships Among Variables.'],
+  ['C23','2C32', 5,'Summarizing and describing relationships belongs in Summarizing Relationships Among Variables.'],
+  // C.2.4 → Non-Traditional Data → A.1.1 + C.2.2
+  ['C24','2A11', 5,'Non-traditional data types (text, audio, sensor, image) are recognized in Recognizing Data in All of Its Forms.'],
+  ['C24','2C22', 5,'Visualizing and analyzing non-traditional data (word clouds, sensor trends, geospatial) maps to Visualizing Relationships.'],
+  // C.2.5 → Machine Learning → D.1.2 + D.3.1
+  ['C25','2D12', 2,'ML models (decision trees, classification) belong in Building Models for Outcomes.'],
+  ['C25','2D31', 2,'Evaluating ML model performance (accuracy, error) belongs in Quantifying Error and Comparing Models.'],
+  // C.3.1 → Describing Variability → C.4.1 + C.3.1
+  ['C31','2C41', 4,'Understanding sources of variability maps to Sources of Variability.'],
+  ['C31','2C31', 4,'Describing spread and shape connects to Summarizing Single Variables.'],
+  // C.3.2 → Comparing Variability → C.3.2
+  ['C32','2C32', 5,'Comparing variability across groups is a multivariate summary activity.'],
+  // C.3.3 → Sources of Variability → C.4.1 + C.4.2 + D.3.1
+  ['C33','2C41', 5,'Understanding measurement, natural, and sampling variability maps to Sources of Variability.'],
+  ['C33','2C42', 3,'Reasoning about whether a pattern is real or noise maps to Signal, Noise, and Reasoning Beyond the Data.'],
+  ['C33','2D31', 3,'Measurement error as a source of model error maps to Quantifying Error and Comparing Models.'],
+  // C.3.4 → Variability in Computational Tools → A.1.3 + B.3.2
+  ['C34','2A13', 2,'AI output variability is understood through the AI systems and mathematical model frame.'],
+  ['C34','2B32', 2,'Ethical dimensions of AI variability (bias, hallucination) map to Harm, Accountability, and Societal Footprint.'],
+  // C.4.1 → Tool Application → NEW (no single V2 concept; C.4 concepts are integrated across V2)
+  ['C41','NEW',  9,'Tool application skills were dissolved across V2 concepts rather than kept as standalone tool-use concepts.'],
+  // C.4.2 → Tool Ethics → B.3.2
+  ['C42','2B32', 3,'Tool ethics (privacy, bias, AI limitations) are ethical/societal dimensions mapped to Harm, Accountability, and Societal Footprint.'],
+  // C.4.3 + C.4.4 → NEW (tool evaluation/selection dissolved)
+  ['C43','NEW',  2,'Tool evaluation content was integrated into broader concepts rather than maintained as standalone.'],
+  ['C44','NEW',  5,'Tool selection judgment was integrated into broader task-based competencies.'],
+  // C.4.5 → Role of Code → E.2.3
+  ['C45','2E23', 6,'Code as documentation and reproducibility tool maps to Justifying and Communicating Analytical Decisions.'],
+  // C.4.6 → Tool Accessibility → NEW
+  ['C46','NEW',  9,'Tool accessibility content was integrated within visualization and communication concepts rather than maintained as standalone.'],
+  // C.5.1 → Understanding Modeling → D.1.1
+  ['C51','2D11',14,'Understanding modeling (what models do, their limitations) maps directly to Understanding and Selecting Models.'],
+  // C.5.2 → Creating Models → D.1.2 + D.3.1
+  ['C52','2D12', 9,'Building classification and regression models maps to Building Models for Outcomes.'],
+  ['C52','2D31', 5,'Testing and refining models, comparing predictions to data, maps to Quantifying Error and Comparing Models.'],
+  // D.1.1 → Probabilistic Language → D.1.3 + E.1.2
+  ['D11','2D13', 3,'Probabilistic language and uncertainty expression is foundational to Representing Uncertainty with Probability.'],
+  ['D11','2E12', 2,'Expressing statistical significance and findings with appropriate language maps to Characterizing Significance and Implications.'],
+  // D.1.2 → Priors and Updates → D.1.3 (probability) + A.4.3 (iterating)
+  ['D12','2D13', 6,'Bayesian/prior-update reasoning maps to Representing Uncertainty with Probability.'],
+  ['D12','2A43', 3,'Updating conclusions iteratively as evidence arrives maps to Iterating as Evidence Emerges.'],
+  // D.1.3 → Expected Value → D.2.1
+  ['D13','2D21', 6,'Expected value calculations support prediction and decision-making — maps to Predicting New Cases.'],
+  // D.1.4 → Explaining Significance → E.1.2 + D.1.3
+  ['D14','2E12', 8,'Statistical significance, effect size, and statistical power map to Characterizing Significance and Implications.'],
+  ['D14','2D13', 3,'Probability distributions as the model underlying significance testing maps to Representing Uncertainty with Probability.'],
+  // D.1.5 → Sampling and Simulation → D.2.2 + B.2.1
+  ['D15','2D22', 7,'Simulation-based inference for distinguishing patterns from chance maps to Reasoning Beyond the Data.'],
+  ['D15','2B21', 7,'Sampling design logic (sample size, bias, representativeness) maps to Evaluating and Designing Sampling Procedures.'],
+  // D.1.6 → Correlation vs. Causation → D.3.2 + A.3.2
+  ['D16','2D32', 6,'Separating correlation from causation maps to Weighing Evidence and Causal Claims.'],
+  ['D16','2A32', 2,'Asking whether one thing truly causes another is Questioning What a Claim Really Shows.'],
+  // D.1.7 → Randomization → B.2.2 + D.3.2
+  ['D17','2B22', 3,'Randomization as a research design principle maps to Investigation Design.'],
+  ['D17','2D32', 2,'Randomization as causal evidence maps to Weighing Evidence and Causal Claims.'],
+  // D.1.8 → Multi-Variable Decision Making → E.1.1 + D.1.2
+  ['D18','2E11', 5,'Interpreting multi-variable regression results in context maps to Interpreting Results in Context.'],
+  ['D18','2D12', 5,'Building multi-variable regression models maps to Building Models for Outcomes.'],
+  // D.2.1 → Verifiable Questions → A.4.2
+  ['D21','2A42',11,'Verifiable, testable, hypothesis-based question formulation maps to Forming Investigatable Questions.'],
+  // D.2.2 → Iteration, Validation → A.4.3 + D.3.3
+  ['D22','2A43', 5,'Iterative validation — revising and retesting — maps to Iterating as Evidence Emerges.'],
+  ['D22','2D33', 4,'Model comparison through validation maps to Refining and Updating Models.'],
+  // D.2.3 → Uncertainty Statements → E.1.2 + E.1.3
+  ['D23','2E12', 2,'Uncertainty statements are how significance and implications are characterized.'],
+  ['D23','2E13', 2,'Stating limitations and caveats belongs in Evaluating Claims and Evidence.'],
+  // D.2.4 → Relevant Conclusions → E.1.1 + E.1.3
+  ['D24','2E11', 5,'Ensuring conclusions are relevant to the original question maps to Interpreting Results in Context.'],
+  ['D24','2E13', 3,'Evaluating whether conclusions are justified by data maps to Evaluating Claims and Evidence.'],
+  // D.3.1 → Application Fitness → C.4.2 + D.3.3
+  ['D31','2C42', 5,'Application fitness — whether findings generalize — maps to Signal, Noise, and Reasoning Beyond the Data.'],
+  ['D31','2D33', 4,'Strategies for generalizing findings to new contexts map to Refining and Updating Models.'],
+  // D.3.2 → Sample vs. Population → D.2.2 + B.2.1
+  ['D32','2D22', 4,'Sample-to-population reasoning defines what models can generalize to — Reasoning Beyond the Data.'],
+  ['D32','2B21', 2,'Sampling method design and its effect on representativeness lives in Evaluating and Designing Sampling Procedures.'],
+  // D.3.3 → Sample Size → B.2.1 + D.2.2
+  ['D33','2B21', 5,'Sample size as a key design consideration lives in Evaluating and Designing Sampling Procedures.'],
+  ['D33','2D22', 3,'Sample size affects reliability of inference — Reasoning Beyond the Data.'],
+  // D.3.4 → Sample Bias → B.2.1
+  ['D34','2B21', 4,'Sample bias identification and mitigation is core to Evaluating and Designing Sampling Procedures.'],
+  // D.3.5 → Extension Statements → D.3.3 + C.4.2
+  ['D35','2D33', 3,'Extension statements are arguments about generalizability — Refining and Updating Models.'],
+  ['D35','2C42', 2,'Recognizing the limits of generalization maps to Signal, Noise, and Reasoning Beyond the Data.'],
+  // D.3.6 → Subset Effects → C.3.2 + D.3.3
+  ['D36','2C32', 3,"Subset effects and Simpson's Paradox appear when summarizing multivariate relationships."],
+  ['D36','2D33', 2,"Simpson's Paradox limits generalizability of aggregate findings — Refining and Updating Models."],
+  // D.3.7 → Meta-Analysis → D.3.1 + E.2.3
+  ['D37','2D31', 3,'Meta-analysis as model validation connects to Quantifying Error and Comparing Models.'],
+  ['D37','2E23', 3,'Reproducible documentation is a prerequisite for study replication — Justifying Analytical Decisions.'],
+  // E.1.1 → Sense-Making Viz → C.2.1 + C.2.2 + E.2.2
+  ['E11','2C21', 4,'Sense-making visualizations for single variables map to Visualizing Single Variables.'],
+  ['E11','2C22', 4,'Sense-making visualizations for relationships map to Visualizing Relationships Among Variables.'],
+  ['E11','2E22', 3,'Claim-supportive visualization design is central to Communicating for Audience and Visualization Design.'],
+  // E.1.2 → Investigate with Viz → C.2.1 + C.2.2
+  ['E12','2C21', 5,'Investigative single-variable visualizations (distributions, outlier detection) map to Visualizing Single Variables.'],
+  ['E12','2C22', 5,'Investigative multivariate visualizations (scatterplots, parallel plots) map to Visualizing Relationships.'],
+  // E.1.3 → Clear Design → E.2.2 + E.2.4
+  ['E13','2E22', 6,'Clear design principles (labels, color, citation) are core to Communicating for Audience and Visualization Design.'],
+  ['E13','2E24', 5,'User-centered design and graphical literacy for reading others\' charts maps to Reading and Critically Evaluating Data Communication.'],
+  // E.1.4 → Graphical Literacy → E.2.4
+  ['E14','2E24',12,'Graphical literacy — accurately reading and interpreting charts — maps directly to Reading and Critically Evaluating Data Communication.'],
+  // E.1.5 → Representational Fluency → E.2.4 + E.2.2
+  ['E15','2E24', 5,'Recognizing how layout, scale, and design choices mislead maps to Reading and Critically Evaluating Data Communication.'],
+  ['E15','2E22', 4,'Choosing and defending visualization representations maps to Communicating for Audience and Visualization Design.'],
+  // E.1.6 → Parallel Visual Type → E.2.4 + E.2.2
+  ['E16','2E24', 3,'Matching chart type to data type is a graphical literacy reading skill.'],
+  ['E16','2E22', 3,'Choosing the appropriate visualization type when designing is part of visualization design.'],
+  // E.2.1 → Narratives + Viz → E.2.1 + E.2.2
+  ['E21','2E21', 5,'Connecting narratives to visualizations and communicating completeness maps to Communicating with Completeness and Accuracy.'],
+  ['E21','2E22', 3,'Audience-tailored narrative + visualization is Communicating for Audience and Visualization Design.'],
+  // E.2.2 → Write Data Stories → E.2.1 + E.2.2
+  ['E22','2E21', 8,'Writing accurate, honest data stories is communicating with completeness and accuracy.'],
+  ['E22','2E22', 8,'Story structure, hooks, audience tailoring, and visualization integration map to Communicating for Audience and Visualization Design.'],
+  // E.2.3 → Adapt Narratives → E.2.1 + E.2.2
+  ['E23','2E21', 5,'Adapting narratives for different audiences is core to Communicating with Completeness and Accuracy.'],
+  ['E23','2E22', 4,'Choosing communication formats and analogies for audiences maps to Communicating for Audience and Visualization Design.'],
+  // E.3.1 → Intent and Authorship → E.2.4 + E.2.1
+  ['E31','2E24', 7,'Interrogating author intent, source bias, and institutional agendas maps to Reading and Critically Evaluating Data Communication.'],
+  ['E31','2E21', 6,'Transparent authorship and source attribution support Communicating with Completeness and Accuracy.'],
+  // E.3.2 → Advocacy → A.2.2 + E.2.1
+  ['E32','2A22', 5,'Data advocacy is a direct expression of Agency and Action with Data.'],
+  ['E32','2E21', 4,'Advocacy communication requires completeness and accuracy — Communicating with Completeness and Accuracy.'],
+  // E.3.3 → Civic Data → A.2.1 + A.2.2
+  ['E33','2A21', 2,'Civic data practices cultivate questioning curiosity applied to civic life.'],
+  ['E33','2A22', 2,'Civic engagement with data is data agency in action.'],
+  // E.3.4 → Impacts of Tech → B.3.2 + A.1.3
+  ['E34','2B32', 3,'Environmental and human costs of technology map to Harm, Accountability, and Societal Footprint.'],
+  ['E34','2A13', 3,'Societal impacts of AI and data technology map to Data, Computing, and AI Systems.'],
 ];
 
-// ─── Build lookup maps ────────────────────────────────────────────
+// ── Build lookup maps ─────────────────────────────────────────────────────────
 const v1Map = {}, v2Map = {};
 V1.forEach(n => v1Map[n.id] = n);
 V2.forEach(n => v2Map[n.id] = n);
@@ -439,60 +520,67 @@ RAW_LINKS.forEach(([s,t,c]) => {
   v2In[t]  = (v2In[t] ||0)+c;
 });
 
-// ─── Layout ───────────────────────────────────────────────────────
-const BASE = 1.5;   // px per competency
-const PAD  = 4;     // gap between nodes
-const ML   = 240;   // left margin
-const MR   = 260;   // right margin
+// ── Layout ────────────────────────────────────────────────────────────────────
+const BASE = 1.6;
+const PAD  = 5;
+const ML   = 250;   // left margin (room for labels)
+const MR   = 280;
 const MT   = 55;
 const COL_W = 10;
-const MID   = 560;
+const MID   = 540;
 
 function computePositions(nodes, getHeight) {
   const pos = {};
   let y = MT;
+  let prevStrand = null;
   nodes.forEach(n => {
+    if (prevStrand && n.strand !== prevStrand) y += 12; // strand gap
     const h = getHeight(n);
     pos[n.id] = { y0: y, h };
     y += h + PAD;
+    prevStrand = n.strand;
   });
   return pos;
 }
 
-const v1Pos = computePositions(V1, n => Math.max(3, n.comp * BASE));
+// For V1: "NEW" node sits at very bottom, separated
+const v1NodesDisplay = [...V1];
+const v1Pos = computePositions(v1NodesDisplay, n => {
+  if (n.id === 'NEW') {
+    // height = sum of competencies flowing into V2 NEW concepts
+    const tot = RAW_LINKS.filter(l=>l[1]==='NEW').reduce((s,l)=>s+l[2],0);
+    return Math.max(6, tot * BASE);
+  }
+  return Math.max(3, n.comp * BASE);
+});
+
 const v2InComp = {};
 RAW_LINKS.forEach(([s,t,c]) => { v2InComp[t] = (v2InComp[t]||0)+c; });
-const v2Pos = computePositions(V2, n => Math.max(3, (v2InComp[n.id]||2) * BASE));
+const v2Pos = computePositions(V2, n => Math.max(3, (v2InComp[n.id]||3) * BASE));
 
 const totalH = Math.max(
-  v1Pos[V1[V1.length-1].id].y0 + v1Pos[V1[V1.length-1].id].h + 30,
+  v1Pos[v1NodesDisplay[v1NodesDisplay.length-1].id].y0 + v1Pos[v1NodesDisplay[v1NodesDisplay.length-1].id].h + 30,
   v2Pos[V2[V2.length-1].id].y0 + v2Pos[V2[V2.length-1].id].h + 30
 );
 const totalW = ML + COL_W + MID + COL_W + MR;
 
-// ─── Build link objects with vertical offsets ─────────────────────
+// ── Build link objects ────────────────────────────────────────────────────────
 const v1Used = {}, v2Used = {};
 const linkObjs = RAW_LINKS.map(([sid, tid, comp, rationale]) => {
-  const sv = v1Pos[sid], tv = v2Pos[tid];
-  const sTot = v1Map[sid].comp;
+  const sv = v1Pos[sid], tv = v2Pos[tid] || v2Pos[V2[0].id]; // fallback
+  const sTot = sid === 'NEW' ? RAW_LINKS.filter(l=>l[0]==='NEW').reduce((s,l)=>s+l[2],0) : (v1Map[sid].comp || comp);
   const tTot = v2InComp[tid] || comp;
-
   const sH = sv.h * (comp / sTot);
   const tH = tv.h * (comp / tTot);
-
-  const sy0 = sv.y0 + (v1Used[sid] || 0);
-  const ty0 = tv.y0 + (v2Used[tid] || 0);
-
-  v1Used[sid] = (v1Used[sid] || 0) + sH;
-  v2Used[tid] = (v2Used[tid] || 0) + tH;
-
-  return { sid, tid, comp, rationale,
-    sy0, sy1: sy0 + sH,
-    ty0, ty1: ty0 + tH,
-    strand: v1Map[sid].strand };
+  const sy0 = sv.y0 + (v1Used[sid]||0);
+  const ty0 = tv.y0 + (v2Used[tid]||0);
+  v1Used[sid] = (v1Used[sid]||0) + sH;
+  v2Used[tid] = (v2Used[tid]||0) + tH;
+  return { sid, tid, comp, rationale, sy0, sy1: sy0+sH, ty0, ty1: ty0+tH,
+           strand: tid === 'NEW' ? 'NEW' : v1Map[sid]?.strand || 'NEW' };
 });
 
-// ─── Draw ─────────────────────────────────────────────────────────
+// ── Draw ──────────────────────────────────────────────────────────────────────
 const svg = d3.select('#chart')
   .append('svg')
   .attr('width', totalW)
@@ -507,10 +595,10 @@ const hdr = (x, anchor, line1, line2) => {
   svg.append('text').attr('x',x).attr('y',35).attr('text-anchor',anchor)
     .attr('font-size',9).attr('fill','#7a8899').text(line2);
 };
-hdr(ML + COL_W/2, 'middle', 'Version 1  ·  83 concepts', '~699 competencies across K–12');
-hdr(ML+COL_W+MID+COL_W/2, 'middle', 'Version 2  ·  37 concepts', 'reorganized learning progressions');
+hdr(ML + COL_W/2,         'middle', 'Version 1  ·  83 concepts', 'original learning progressions');
+hdr(ML+COL_W+MID+COL_W/2,'middle', 'Version 2  ·  43 concepts', 'reorganized and consolidated');
 
-// ─── Tooltip ──────────────────────────────────────────────────────
+// ── Tooltip ───────────────────────────────────────────────────────────────────
 const ttEl = document.getElementById('tt');
 const showTT = (e, html) => { ttEl.innerHTML = html; ttEl.classList.add('show'); moveTT(e); };
 const moveTT = e => {
@@ -520,7 +608,7 @@ const moveTT = e => {
 };
 const hideTT = () => ttEl.classList.remove('show');
 
-// ─── Panel ────────────────────────────────────────────────────────
+// ── Panel ─────────────────────────────────────────────────────────────────────
 const panel     = document.getElementById('panel');
 const panelTitle= document.getElementById('panelTitle');
 const panelBody = document.getElementById('panelBody');
@@ -542,99 +630,92 @@ function openPanel(type, id) {
 
   if (type === 'v1') {
     const n = v1Map[id];
+    if (!n) return;
+    const isNew = id === 'NEW';
     const color = SC[n.strand];
     const links = linkObjs.filter(l => l.sid === id);
     const isSplit = links.length > 1;
-
-    panelTitle.textContent = `V1 · ${n.code}`;
-    panelBody.innerHTML = `
-      <div class="p-concept">
-        <div class="p-concept-code" style="color:${color}">${n.code} · Version 1</div>
-        <div class="p-concept-name">${n.name}</div>
-        <div class="p-comp-total"><strong>${n.comp}</strong> competencies · Strand ${n.strand}
-          ${isSplit ? ' · <span style="color:#f87171">Splits into '+links.length+' V2 concepts</span>' : ''}
-        </div>
-        ${gradeBars(n, color)}
-      </div>
-      <div class="p-divider"></div>
-      <div class="p-section-lbl">Maps to in Version 2</div>
-      ${links.map(l => {
-        const t = v2Map[l.tid];
-        const tc = SC[t.strand];
-        return `<div class="p-flow">
-          <div class="p-flow-header">
-            <div class="p-flow-code" style="color:${tc}">${t.code}</div>
-            <div class="p-flow-badge badge-comp">${l.comp} competencies</div>
+    panelTitle.textContent = isNew ? 'New in V2' : `V1 · ${n.code}`;
+    panelBody.innerHTML = isNew
+      ? `<div class="p-concept">
+          <div class="p-concept-code" style="color:${color}">NEW · Version 2 only</div>
+          <div class="p-concept-name">Concepts with no direct V1 predecessor</div>
+          <div class="p-comp-total">These V2 concepts drew from implicit V1 content or represent genuinely new additions.</div>
+         </div>
+         <div class="p-divider"></div>
+         <div class="p-section-lbl">V2 Concepts in this bucket</div>
+         ${links.map(l=>{const t=v2Map[l.tid];const tc=SC[t.strand];return `<div class="p-flow">
+           <div class="p-flow-header"><div class="p-flow-code" style="color:${tc}">${t.code}</div><div class="p-flow-badge">${l.comp} competencies</div></div>
+           <div class="p-flow-name">${t.name}</div>
+           <div class="p-flow-rationale">${l.rationale}</div>
+         </div>`;}).join('')}`
+      : `<div class="p-concept">
+          <div class="p-concept-code" style="color:${color}">${n.code} · Version 1</div>
+          <div class="p-concept-name">${n.name}</div>
+          <div class="p-comp-total"><strong>${n.comp}</strong> competencies · Strand ${n.strand}
+            ${isSplit?' · <span style="color:#f87171">Splits into '+links.length+' V2 concepts</span>':''}
           </div>
-          <div class="p-flow-name">${t.name}</div>
-          <div class="p-flow-rationale">${l.rationale}</div>
-        </div>`;
-      }).join('')}
-      <div class="p-note">⚠ Competency counts are proportionally allocated estimates. Individual competency-level mapping is pending.</div>
-    `;
+          ${gradeBars(n, color)}
+         </div>
+         <div class="p-divider"></div>
+         <div class="p-section-lbl">Maps to in Version 2</div>
+         ${links.map(l=>{const t=v2Map[l.tid];const tc=SC[t.strand];return `<div class="p-flow">
+           <div class="p-flow-header"><div class="p-flow-code" style="color:${tc}">${t.code}</div><div class="p-flow-badge">${l.comp} competencies</div></div>
+           <div class="p-flow-name">${t.name}</div>
+           <div class="p-flow-rationale">${l.rationale}</div>
+         </div>`;}).join('')}`;
 
   } else if (type === 'v2') {
     const n = v2Map[id];
+    if (!n) return;
     const color = SC[n.strand];
     const links = linkObjs.filter(l => l.tid === id);
-    const totalIn = links.reduce((s,l) => s+l.comp, 0);
+    const totalIn = links.reduce((s,l)=>s+l.comp,0);
     const isMerge = links.length > 1;
-
+    const hasNew = links.some(l => l.sid === 'NEW');
     panelTitle.textContent = `V2 · ${n.code}`;
-    panelBody.innerHTML = `
-      <div class="p-concept">
+    panelBody.innerHTML = `<div class="p-concept">
         <div class="p-concept-code" style="color:${color}">${n.code} · Version 2</div>
         <div class="p-concept-name">${n.name}</div>
-        <div class="p-comp-total"><strong>${totalIn}</strong> incoming competencies · Strand ${n.strand}
-          ${isMerge ? ' · <span style="color:#60aff5">Absorbs '+links.length+' V1 concepts</span>' : ''}
-          ${links.length===0 ? ' · <span style="color:#f87171">New in V2 — no direct V1 predecessor</span>' : ''}
+        <div class="p-comp-total"><strong>${n.comp}</strong> competencies · Strand ${n.strand}
+          ${isMerge?' · <span style="color:#60aff5">Absorbs '+links.filter(l=>l.sid!=='NEW').length+' V1 concepts</span>':''}
+          ${hasNew?' · <span style="color:#f87171">Includes new V2 content</span>':''}
+          ${links.length===0?' · <span style="color:#f87171">New in V2</span>':''}
         </div>
-      </div>
-      <div class="p-divider"></div>
-      <div class="p-section-lbl">Receives from Version 1</div>
-      ${links.length === 0 ? '<div style="color:var(--muted);font-size:0.8rem;font-style:italic">This concept is new in Version 2 and has no direct predecessor in Version 1.</div>' : ''}
-      ${links.map(l => {
-        const s = v1Map[l.sid];
-        const sc = SC[s.strand];
-        return `<div class="p-flow">
-          <div class="p-flow-header">
-            <div class="p-flow-code" style="color:${sc}">${s.code}</div>
-            <div class="p-flow-badge badge-comp">${l.comp} competencies</div>
-          </div>
-          <div class="p-flow-name">${s.name}</div>
-          <div class="p-flow-rationale">${l.rationale}</div>
-        </div>`;
-      }).join('')}
-      <div class="p-note">⚠ Competency counts are proportionally allocated estimates. Individual competency-level mapping is pending.</div>
-    `;
+        ${gradeBars(n, color)}
+       </div>
+       <div class="p-divider"></div>
+       <div class="p-section-lbl">Receives from Version 1</div>
+       ${links.length===0?'<div style="color:var(--muted);font-size:0.8rem;font-style:italic">New concept with no V1 predecessor.</div>':''}
+       ${links.map(l=>{const s=v1Map[l.sid];const sc=SC[s.strand];return `<div class="p-flow">
+         <div class="p-flow-header">
+           <div class="p-flow-code" style="color:${sc}">${s.code}${l.sid==='NEW'?' <span class="new-badge">NEW</span>':''}</div>
+           <div class="p-flow-badge">${l.comp} competencies</div>
+         </div>
+         <div class="p-flow-name">${s.name}</div>
+         <div class="p-flow-rationale">${l.rationale}</div>
+       </div>`;}).join('')}`;
 
   } else if (type === 'link') {
-    const l = id; // link object
+    const l = id;
     const s = v1Map[l.sid], t = v2Map[l.tid];
     const sc = SC[s.strand], tc = SC[t.strand];
-    const isSplit = v1Out[l.sid] > 1;
-
     panelTitle.textContent = `${s.code} → ${t.code}`;
-    panelBody.innerHTML = `
-      <div class="p-concept">
-        <div class="p-concept-code" style="color:${sc}">${s.code} · Version 1</div>
+    panelBody.innerHTML = `<div class="p-concept">
+        <div class="p-concept-code" style="color:${sc}">${s.code} · Version 1${l.sid==='NEW'?' <span class="new-badge">NEW</span>':''}</div>
         <div class="p-concept-name">${s.name}</div>
-        <div class="p-comp-total"><strong>${l.comp}</strong> of ${s.comp} competencies flow here
-          ${isSplit ? ' · <span style="color:#f87171">Split mapping</span>' : ''}
-        </div>
-        ${gradeBars(s, sc)}
-      </div>
-      <div style="text-align:center;color:var(--dim);font-size:1.2rem;padding:0.5rem 0">↓</div>
-      <div class="p-concept">
+        <div class="p-comp-total"><strong>${l.comp}</strong> competencies flow here</div>
+        ${s.gb?gradeBars(s, sc):''}
+       </div>
+       <div style="text-align:center;color:var(--dim);font-size:1.2rem;padding:0.5rem 0">↓</div>
+       <div class="p-concept">
         <div class="p-concept-code" style="color:${tc}">${t.code} · Version 2</div>
         <div class="p-concept-name">${t.name}</div>
         <div class="p-comp-total">Receives ${l.comp} competencies from this source</div>
-      </div>
-      <div class="p-divider"></div>
-      <div class="p-section-lbl">Mapping Rationale</div>
-      <div style="font-size:0.82rem;color:var(--text);line-height:1.65">${l.rationale}</div>
-      <div class="p-note" style="margin-top:1rem">⚠ Competency count is a proportional estimate. Individual competency-level mapping is pending.</div>
-    `;
+       </div>
+       <div class="p-divider"></div>
+       <div class="p-section-lbl">Mapping Rationale</div>
+       <div style="font-size:0.82rem;color:var(--text);line-height:1.65">${l.rationale}</div>`;
   }
 }
 
@@ -643,19 +724,16 @@ document.getElementById('panelClose').addEventListener('click', () => {
   chartWrap.classList.remove('panel-open');
 });
 
-// ─── Bands ────────────────────────────────────────────────────────
+// ── Bands ─────────────────────────────────────────────────────────────────────
 function bandPath(sy0, sy1, ty0, ty1) {
   const x0 = ML + COL_W;
   const x1 = ML + COL_W + MID;
-  const cx = (x0 + x1) / 2;
+  const cx = (x0+x1)/2;
   return `M${x0},${sy0} C${cx},${sy0} ${cx},${ty0} ${x1},${ty0}
           L${x1},${ty1} C${cx},${ty1} ${cx},${sy1} ${x0},${sy1} Z`;
 }
 
-const bands = svg.append('g')
-  .selectAll('path')
-  .data(linkObjs)
-  .join('path')
+const bands = svg.append('g').selectAll('path').data(linkObjs).join('path')
   .attr('d', l => bandPath(l.sy0, l.sy1, l.ty0, l.ty1))
   .attr('fill', l => SC[l.strand])
   .attr('fill-opacity', 0.2)
@@ -663,91 +741,79 @@ const bands = svg.append('g')
   .style('cursor','pointer')
   .on('mouseover', function(e, l) {
     d3.select(this).attr('fill-opacity', 0.55);
-    showTT(e, `<div class="tt-t">${l.sid.replace(/\d/g,m=>'.'+m).replace('..','.')} → 2${l.tid.replace('2','').replace(/\d/g,m=>'.'+m).replace('..','.')} </div>
+    const isSplit = v1Out[l.sid]>1;
+    showTT(e, `<div class="tt-t">${v1Map[l.sid].code} → ${v2Map[l.tid].code}</div>
       <div class="tt-b"><b>${v1Map[l.sid].name}</b><br>→ ${v2Map[l.tid].name}<br>${l.comp} competencies</div>
-      <span class="tt-tag ${v1Out[l.sid]>1?'ts':'tm'}">${v1Out[l.sid]>1?'Split':'Merge'}</span>`);
+      <span class="tt-tag ${isSplit?'ts':'tm'}">${isSplit?'Split':'Merge'}</span>`);
   })
   .on('mousemove', moveTT)
-  .on('mouseout', function(e, l) {
-    d3.select(this).attr('fill-opacity', 0.2);
-    hideTT();
-  })
+  .on('mouseout', function() { d3.select(this).attr('fill-opacity', 0.2); hideTT(); })
   .on('click', function(e, l) {
-    e.stopPropagation();
-    hideTT();
+    e.stopPropagation(); hideTT();
     bands.attr('fill-opacity', 0.05);
     d3.select(this).attr('fill-opacity', 0.7);
     openPanel('link', l);
   });
 
-// ─── V1 bars ──────────────────────────────────────────────────────
-const v1G = svg.append('g').selectAll('g').data(V1).join('g').style('cursor','pointer');
+// ── V1 bars ───────────────────────────────────────────────────────────────────
+const v1G = svg.append('g').selectAll('g').data(v1NodesDisplay).join('g').style('cursor','pointer');
 
 v1G.append('rect')
-  .attr('x', ML)
-  .attr('y', n => v1Pos[n.id].y0)
-  .attr('width', COL_W)
-  .attr('height', n => v1Pos[n.id].h)
-  .attr('fill', n => SC[n.strand])
-  .attr('rx', 1)
+  .attr('x', ML).attr('y', n => v1Pos[n.id].y0)
+  .attr('width', COL_W).attr('height', n => v1Pos[n.id].h)
+  .attr('fill', n => SC[n.strand]).attr('rx', 1)
   .on('mouseover', function(e, n) {
-    showTT(e, `<div class="tt-t">${n.code} · ${n.name}</div>
-      <div class="tt-b">Version 1 · ${n.comp} competencies · Strand ${n.strand}</div>
-      <span class="tt-tag ${v1Out[n.id]>1?'ts':'tm'}">${v1Out[n.id]>1?'Split → '+v1Out[n.id]+' V2 concepts':'Single mapping'}</span>`);
+    const isNew = n.id==='NEW';
+    showTT(e, isNew
+      ? `<div class="tt-t">New in V2</div><div class="tt-b">Content with no direct V1 predecessor</div><span class="tt-tag tnew">NEW</span>`
+      : `<div class="tt-t">${n.code} · ${n.name}</div><div class="tt-b">V1 · ${n.comp} competencies · Strand ${n.strand}</div>
+         <span class="tt-tag ${v1Out[n.id]>1?'ts':'tm'}">${v1Out[n.id]>1?'Split → '+v1Out[n.id]+' V2 concepts':'Single mapping'}</span>`);
     bands.attr('fill-opacity', l => l.sid===n.id ? 0.55 : 0.04);
   })
   .on('mousemove', moveTT)
   .on('mouseout', function() { bands.attr('fill-opacity', 0.2); hideTT(); })
   .on('click', function(e, n) {
-    e.stopPropagation();
-    hideTT();
+    e.stopPropagation(); hideTT();
     bands.attr('fill-opacity', l => l.sid===n.id ? 0.45 : 0.05);
     openPanel('v1', n.id);
   });
 
-// Code label
 v1G.append('text')
   .attr('x', ML-4).attr('y', n => v1Pos[n.id].y0 + v1Pos[n.id].h/2)
   .attr('text-anchor','end').attr('dominant-baseline','middle')
   .attr('font-family','DM Mono, monospace').attr('font-size', 7.5)
   .attr('fill', n => SC[n.strand]).attr('fill-opacity', 0.85)
-  .text(n => n.code);
+  .text(n => n.id==='NEW' ? 'NEW' : n.code);
 
-// Short name
 v1G.append('text')
   .attr('x', ML-38).attr('y', n => v1Pos[n.id].y0 + v1Pos[n.id].h/2)
   .attr('text-anchor','end').attr('dominant-baseline','middle')
-  .attr('font-size', 7.5).attr('fill','#7a8899')
-  .text(n => n.name.length>30 ? n.name.slice(0,29)+'…' : n.name);
+  .attr('font-size', 7.5).attr('fill', n => n.id==='NEW' ? '#f87171' : '#7a8899')
+  .text(n => n.id==='NEW' ? 'New in V2' : (n.name.length>30 ? n.name.slice(0,29)+'…' : n.name));
 
-// ─── V2 bars ──────────────────────────────────────────────────────
+// ── V2 bars ───────────────────────────────────────────────────────────────────
 const xR = ML + COL_W + MID;
 const v2G = svg.append('g').selectAll('g').data(V2).join('g').style('cursor','pointer');
 
 v2G.append('rect')
-  .attr('x', xR)
-  .attr('y', n => v2Pos[n.id].y0)
-  .attr('width', COL_W)
-  .attr('height', n => v2Pos[n.id].h)
-  .attr('fill', n => SC[n.strand])
-  .attr('rx', 1)
+  .attr('x', xR).attr('y', n => v2Pos[n.id].y0)
+  .attr('width', COL_W).attr('height', n => v2Pos[n.id].h)
+  .attr('fill', n => SC[n.strand]).attr('rx', 1)
   .on('mouseover', function(e, n) {
     const inc = v2InComp[n.id]||0;
     showTT(e, `<div class="tt-t">${n.code} · ${n.name}</div>
-      <div class="tt-b">Version 2 · ~${inc} incoming competencies · Strand ${n.strand}</div>
+      <div class="tt-b">V2 · ${n.comp} competencies · Strand ${n.strand}</div>
       <span class="tt-tag tm">Absorbs ${linkObjs.filter(l=>l.tid===n.id).length} V1 concepts</span>`);
     bands.attr('fill-opacity', l => l.tid===n.id ? 0.55 : 0.04);
   })
   .on('mousemove', moveTT)
   .on('mouseout', function() { bands.attr('fill-opacity', 0.2); hideTT(); })
   .on('click', function(e, n) {
-    e.stopPropagation();
-    hideTT();
+    e.stopPropagation(); hideTT();
     bands.attr('fill-opacity', l => l.tid===n.id ? 0.45 : 0.05);
     openPanel('v2', n.id);
   });
 
-// Code label
 v2G.append('text')
   .attr('x', xR+COL_W+4).attr('y', n => v2Pos[n.id].y0 + v2Pos[n.id].h/2)
   .attr('dominant-baseline','middle')
@@ -755,86 +821,64 @@ v2G.append('text')
   .attr('fill', n => SC[n.strand]).attr('fill-opacity', 0.85)
   .text(n => n.code);
 
-// Full name
 v2G.append('text')
   .attr('x', xR+COL_W+38).attr('y', n => v2Pos[n.id].y0 + v2Pos[n.id].h/2)
   .attr('dominant-baseline','middle')
   .attr('font-size', 7.5).attr('fill','#c5cdd8')
-  .text(n => n.name.length>44 ? n.name.slice(0,43)+'…' : n.name);
+  .text(n => n.name.length>46 ? n.name.slice(0,45)+'…' : n.name);
 
-// ─── Strand labels ────────────────────────────────────────────────
+// ── Strand labels ─────────────────────────────────────────────────────────────
 const STRAND_FULL = {
-  A: 'Foundations of Data',
-  B: 'Creation and Curation',
-  C: 'Analysis and Exploration',
-  D: 'Sense Making with Models',
-  E: 'Interpretation and Communication'
+  A:'Foundations of Data', B:'Creation and Curation',
+  C:'Exploring and Describing Data', D:'Predicting and Evaluating with Models',
+  E:'Interpretation and Communication', NEW:'New in V2'
 };
 
 function drawStrandLabels(nodes, positions, xLabel, side) {
-  ['A','B','C','D','E'].forEach(s => {
-    const sNodes = nodes.filter(n => n.strand === s);
+  const strands = ['A','B','C','D','E','NEW'];
+  strands.forEach(s => {
+    const sNodes = nodes.filter(n => n.strand===s);
     if (!sNodes.length) return;
     const first = positions[sNodes[0].id];
-    const last  = positions[sNodes[sNodes.length - 1].id];
-    const y0   = first.y0;
-    const y1   = last.y0 + last.h;
-    const yMid = (y0 + y1) / 2;
+    const last  = positions[sNodes[sNodes.length-1].id];
+    const y0 = first.y0, y1 = last.y0 + last.h;
+    const yMid = (y0+y1)/2;
     const color = SC[s];
-    const label = `${s}  ·  ${STRAND_FULL[s]}`;
-    const lx = xLabel + (side === 'left' ? 2 : -2);
-
-    // Bracket line
-    svg.append('line')
-      .attr('x1', lx).attr('x2', lx)
-      .attr('y1', y0 + 2).attr('y2', y1 - 2)
-      .attr('stroke', color).attr('stroke-opacity', 0.25)
-      .attr('stroke-width', 1.5).attr('stroke-linecap', 'round');
-
-    // Top tick
-    svg.append('line')
-      .attr('x1', xLabel).attr('x2', xLabel + (side === 'left' ? 4 : -4))
-      .attr('y1', y0 + 2).attr('y2', y0 + 2)
-      .attr('stroke', color).attr('stroke-opacity', 0.25).attr('stroke-width', 1.5);
-
-    // Bottom tick
-    svg.append('line')
-      .attr('x1', xLabel).attr('x2', xLabel + (side === 'left' ? 4 : -4))
-      .attr('y1', y1 - 2).attr('y2', y1 - 2)
-      .attr('stroke', color).attr('stroke-opacity', 0.25).attr('stroke-width', 1.5);
-
-    // Rotated label — placed inside the margin, between bracket and bars
-    const textX = xLabel + (side === 'left' ? 20 : -20);
-    const rot   = side === 'left' ? -90 : 90;
+    const lx = xLabel + (side==='left' ? 2 : -2);
+    svg.append('line').attr('x1',lx).attr('x2',lx).attr('y1',y0+2).attr('y2',y1-2)
+      .attr('stroke',color).attr('stroke-opacity',0.25).attr('stroke-width',1.5).attr('stroke-linecap','round');
+    svg.append('line').attr('x1',xLabel).attr('x2',xLabel+(side==='left'?4:-4))
+      .attr('y1',y0+2).attr('y2',y0+2).attr('stroke',color).attr('stroke-opacity',0.25).attr('stroke-width',1.5);
+    svg.append('line').attr('x1',xLabel).attr('x2',xLabel+(side==='left'?4:-4))
+      .attr('y1',y1-2).attr('y2',y1-2).attr('stroke',color).attr('stroke-opacity',0.25).attr('stroke-width',1.5);
+    const textX = xLabel + (side==='left' ? 20 : -20);
+    const rot = side==='left' ? -90 : 90;
+    const label = `${s==='NEW'?'':''+s+'  ·  '}${STRAND_FULL[s]}`;
     svg.append('text')
-      .attr('transform', `translate(${textX},${yMid}) rotate(${rot})`)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'middle')
-      .attr('font-family', "'DM Sans', sans-serif")
-      .attr('font-size', 8)
-      .attr('font-weight', 500)
-      .attr('letter-spacing', '0.06em')
-      .attr('fill', color)
-      .attr('fill-opacity', 0.65)
+      .attr('transform',`translate(${textX},${yMid}) rotate(${rot})`)
+      .attr('text-anchor','middle').attr('dominant-baseline','middle')
+      .attr('font-family',"'DM Sans', sans-serif").attr('font-size',8).attr('font-weight',500)
+      .attr('letter-spacing','0.06em').attr('fill',color).attr('fill-opacity',0.65)
       .text(label);
   });
 }
 
-drawStrandLabels(V1, v1Pos, 10,          'left');
-drawStrandLabels(V2, v2Pos, totalW - 10, 'right');
+drawStrandLabels(v1NodesDisplay, v1Pos, 10, 'left');
+drawStrandLabels(V2, v2Pos, totalW-10, 'right');
 
-// ─── Click away resets ────────────────────────────────────────────
 svg.on('click', () => { bands.attr('fill-opacity', 0.2); });
 
-// ─── Filters ──────────────────────────────────────────────────────
+// ── Filters ───────────────────────────────────────────────────────────────────
 let fStrand='all', fPattern='all';
 
 function applyFilter() {
-  const vis = new Set(), vv1 = new Set(), vv2 = new Set();
+  const vis=new Set(), vv1=new Set(), vv2=new Set();
   linkObjs.forEach((l,i) => {
-    const stOk = fStrand==='all' || l.strand===fStrand;
+    const stOk = fStrand==='all'
+      || (fStrand==='NEW' && l.sid==='NEW')
+      || (fStrand!=='NEW' && l.strand===fStrand);
     const isSplit = v1Out[l.sid]>1;
-    const isMerge = (linkObjs.filter(x=>x.tid===l.tid).length)>1;
+    const isMerge = linkObjs.filter(x=>x.tid===l.tid).length>1;
     const ptOk = fPattern==='all'
       || (fPattern==='splits' && isSplit)
       || (fPattern==='merges' && isMerge);
@@ -850,12 +894,13 @@ function applyFilter() {
 document.querySelectorAll('.btn[data-f]').forEach(btn => {
   btn.addEventListener('click', function() {
     const f=this.dataset.f, c=this.dataset.c;
-    const strands=['all','A','B','C','D','E'];
+    const strands=['all','A','B','C','D','E','NEW'];
     const patterns=['splits','merges'];
     if (strands.includes(f)) {
       document.querySelectorAll('.btn[data-f]').forEach(b => { if(strands.includes(b.dataset.f)) b.className='btn'; });
       fStrand=f;
-      this.classList.add(f==='all'?'aa':'b'+c);
+      const cls = f==='all'?'aa':f==='NEW'?'bn':'b'+c;
+      this.classList.add(cls);
     } else {
       document.querySelectorAll('.btn[data-f]').forEach(b => { if(patterns.includes(b.dataset.f)) b.className='btn'; });
       fPattern = fPattern===f ? 'all' : f;
