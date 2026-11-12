@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learning Progressions crosswalk: Version 1 to Version 2</title>
+<title>Data Science Learning Progressions · DS4E</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@ a{color:var(--A)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
 
 /* ---------- masthead ---------- */
-.masthead{padding:2.4rem 2rem 1.5rem;max-width:78rem;margin:0 auto}
+.masthead{padding:1.4rem 2rem 1rem;max-width:78rem;margin:0 auto}
 .masthead h1{font-family:Spectral,Georgia,serif;font-weight:300;font-size:2.1rem;
   line-height:1.12;letter-spacing:-.015em;max-width:24ch}
 .lede{font-family:Spectral,Georgia,serif;font-size:1.0625rem;line-height:1.65;
@@ -168,11 +168,25 @@ footer p+p{margin-top:.6rem}
 <body>
 
 <div class="masthead">
-  <h1>Where did my concept go?</h1>
-  <p class="lede">A competency-level crosswalk between Version 1 and Version 2 of the K&ndash;12
-  Data Literacy and Data Science Learning Progressions. Every connection shown here is drawn from
-  the Version&nbsp;2 workbook and the published Version&nbsp;1 document. Select any concept to see
-  what it became, down to the individual competencies.</p>
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.9rem;">
+    <div style="width:38px;height:38px;background:#2f6f8f;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="18" r="2" fill="white"/>
+        <circle cx="11" cy="11" r="2" fill="white"/>
+        <circle cx="18" cy="4"  r="2" fill="white"/>
+        <circle cx="4"  cy="11" r="1.3" fill="white" opacity=".45"/>
+        <circle cx="18" cy="11" r="1.3" fill="white" opacity=".45"/>
+        <line x1="4" y1="18" x2="11" y2="11" stroke="white" stroke-width="1.3" opacity=".7"/>
+        <line x1="11" y1="11" x2="18" y2="4"  stroke="white" stroke-width="1.3" opacity=".7"/>
+        <line x1="4"  y1="11" x2="11" y2="11" stroke="white" stroke-width="1.3" opacity=".35"/>
+        <line x1="11" y1="11" x2="18" y2="11" stroke="white" stroke-width="1.3" opacity=".35"/>
+      </svg>
+    </div>
+    <div>
+      <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);font-weight:600;line-height:1;">Data Science 4 Everyone</div>
+      <h1 style="font-family:Spectral,Georgia,serif;font-weight:300;font-size:1.55rem;line-height:1.1;letter-spacing:-.01em;margin-top:.18rem;">Data Science Learning Progressions <span style="color:var(--faint);font-size:1.1rem;">· Concept Crosswalk V1 → V2</span></h1>
+    </div>
+  </div>
   <div class="tally" id="tally"></div>
 </div>
 
@@ -204,16 +218,7 @@ footer p+p{margin-top:.6rem}
   <div class="tablewrap" id="tablewrap"></div>
 </div>
 
-<footer>
-  <p id="foot1"></p>
-  <p><b>One Version&nbsp;1 concept is not carried into Version&nbsp;2: C.4.6, tool accessibility
-  for diverse learners.</b> Its competencies covered screen readers, captions, tactile graphs,
-  sonification, and alt text. Everything else in Version&nbsp;1 has a home in Version&nbsp;2.</p>
-  <p id="foot2"></p>
-  <p>Built from <span class="code">Final_DSLP_Version_2.xlsx</span> (concept text, competency text,
-  change type, and the source column) and the published Version&nbsp;1 document (concept names and
-  competency inventory). Counts regenerate from those files; nothing here is hand-entered.</p>
-</footer>
+
 
 <div class="drawer" id="drawer" role="dialog" aria-modal="false" aria-labelledby="dTitle">
   <div class="drawer-top">
@@ -262,13 +267,7 @@ document.getElementById('tally').innerHTML = [
   [S.crossStrandComp, 'competencies that changed strand'],
 ].map(([b,l])=>`<div><b>${b}</b><span>${l}</span></div>`).join('');
 
-document.getElementById('foot1').innerHTML =
-  `Version&nbsp;2 consolidates Version&nbsp;1&rsquo;s ${S.v1Concepts} concepts into
-   ${S.v2Concepts}, and its ${S.v1Comp} competencies into ${S.v2Comp}. ${S.crossStrand} of the
-   ${S.links} connections cross from one strand into another, carrying ${S.crossStrandComp}
-   competencies, so a curriculum organised by strand will see the most movement.`;
 
-document.getElementById('foot2').remove();
 
 /* ============================================================
    legend
@@ -311,7 +310,7 @@ function conceptComp(code,side){
    diagram
    ============================================================ */
 const UNIT=1.45, GAP=4, SUBGAP=13, TOP=46, COLW=11, MIDW=330;
-const LEFTPAD=232, RIGHTPAD=268;
+const LEFTPAD=320, RIGHTPAD=320;
 
 function buildLayout(){
   const links=activeLinks();
@@ -360,11 +359,10 @@ function drawDiagram(){
     .attr('aria-label',`Flow diagram linking ${leftNodes.length} Version 1 concepts to ${rightNodes.length} Version 2 concepts. A table view with the same data is available from the toolbar.`);
 
   const defs=svg.append('defs');
-  const hp=defs.append('pattern').attr('id','hatch').attr('width',6).attr('height',6)
+  const hp=defs.append('pattern').attr('id','hatch').attr('width',5).attr('height',5)
     .attr('patternTransform','rotate(45)').attr('patternUnits','userSpaceOnUse');
-  hp.append('rect').attr('width',6).attr('height',6).attr('fill','#fff');
-  hp.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',6)
-    .attr('stroke','#b0362c').attr('stroke-width',2).attr('stroke-opacity',.5);
+  hp.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',5)
+    .attr('stroke','#8e9aa6').attr('stroke-width',1).attr('stroke-opacity',.35);
 
 
   const xL=LEFTPAD, xR=LEFTPAD+COLW+MIDW;
@@ -385,10 +383,14 @@ function drawDiagram(){
   const ribbons=links.map(l=>{
     const a=L.pos[l.s], b=R.pos[l.t];
     if(!a||!b) return null;
-    const srcTot=conceptComp(l.s,'v1')||l.w;
-    const tgtTot=conceptComp(l.t,'v2')||l.w;
-    const sh=a.h*(l.w/Math.max(srcTot,l.w));
-    const th=b.h*(l.w/Math.max(tgtTot,l.w));
+    // Use the sum of all link weights for this node as denominator
+    // so ribbons always fill the full bar (no unaccounted gap)
+    const srcSum=links.filter(x=>x.s===l.s).reduce((t,x)=>t+x.w,0)||l.w;
+    const tgtSum=links.filter(x=>x.t===l.t).reduce((t,x)=>t+x.w,0)||l.w;
+    const srcTot=Math.max(srcSum, conceptComp(l.s,'v1')||1);
+    const tgtTot=Math.max(tgtSum, conceptComp(l.t,'v2')||1);
+    const sh=a.h*(l.w/srcTot);
+    const th=b.h*(l.w/tgtTot);
     const sy=a.y+(used1[l.s]||0), ty=b.y+(used2[l.t]||0);
     used1[l.s]=(used1[l.s]||0)+sh; used2[l.t]=(used2[l.t]||0)+th;
     return {...l,sy,sy1:sy+sh,ty,ty1:ty+th};
@@ -425,18 +427,7 @@ function drawDiagram(){
       .attr('height',n=>pos[n.code].h).attr('rx',1)
       .attr('fill',n=>HEX[n.strand]).attr('fill-opacity',.85);
 
-    /* unaccounted segment */
-    g.append('rect')
-      .attr('x',x).attr('width',COLW)
-      .attr('y',n=>{
-        const p=pos[n.code], acc=side==='v1'?(used1[n.code]||0):(used2[n.code]||0);
-        return p.y+acc;})
-      .attr('height',n=>{
-        const p=pos[n.code], acc=side==='v1'?(used1[n.code]||0):(used2[n.code]||0);
-        return Math.max(0,p.h-acc);})
-      .attr('fill','url(#hatch)').attr('stroke',n=>HEX[n.strand])
-      .attr('stroke-opacity',.3).attr('stroke-width',.5)
-      .style('pointer-events','none');
+    /* unaccounted segment — hidden since ribbons now fill bars proportionally */
 
     g.append('rect')
       .attr('x',x-2).attr('y',n=>pos[n.code].y-1).attr('width',COLW+4)
@@ -453,7 +444,11 @@ function drawDiagram(){
     /* labels */
     const anchor = side==='v1'?'end':'start';
     const codeX  = side==='v1'? x-5 : x+COLW+5;
-    const nameX  = side==='v1'? x-42 : x+COLW+42;
+    const nameX  = side==='v1'? x-46 : x+COLW+46;
+    // available pixel width for name text
+    const nameW  = side==='v1'? LEFTPAD-52 : RIGHTPAD-52;
+    // approx chars that fit at 9.5px (roughly 5.8px per char)
+    const maxCh  = Math.floor(nameW/5.8);
     g.append('text').attr('x',codeX).attr('y',n=>pos[n.code].y+pos[n.code].h/2)
       .attr('text-anchor',anchor).attr('dominant-baseline','middle')
       .attr('class','code').attr('font-size',9.5).attr('fill',n=>HEX[n.strand])
@@ -461,8 +456,7 @@ function drawDiagram(){
     g.append('text').attr('x',nameX).attr('y',n=>pos[n.code].y+pos[n.code].h/2)
       .attr('text-anchor',anchor).attr('dominant-baseline','middle')
       .attr('font-size',9.5).attr('fill','#5d6b7a')
-      .text(n=>n.name.length>(side==='v1'?26:34)
-        ? n.name.slice(0,(side==='v1'?25:33))+'…' : n.name);
+      .text(n=>n.name.length>maxCh ? n.name.slice(0,maxCh-1)+'…' : n.name);
 
     /* orphan marker */
     g.filter(n=> side==='v1' ? DATA.orphans.includes(n.code) : false)
@@ -478,16 +472,44 @@ function drawDiagram(){
     const groups=d3.group(nodes,n=>n.sub);
     groups.forEach((ns,sub)=>{
       const y0=pos[ns[0].code].y, p=pos[ns[ns.length-1].code];
-      const y1=p.y+p.h, lx = side==='v1'? 8 : width-8;
+      const y1=p.y+p.h;
       const col=HEX[sub[0]];
-      svg.append('line').attr('x1',lx).attr('x2',lx).attr('y1',y0).attr('y2',y1)
-        .attr('stroke',col).attr('stroke-opacity',.3).attr('stroke-width',1.5);
+
+      // Subtle full-width tinted band behind the substrand group
+      svg.insert('rect','g')
+        .attr('x',0).attr('y',y0-2)
+        .attr('width',width).attr('height',y1-y0+4)
+        .attr('fill',col).attr('fill-opacity',.03)
+        .attr('rx',2);
+
+      // Thin accent line along the outer edge of the bar column
+      const lx = side==='v1' ? x-4 : x+COLW+4;
+      svg.append('line')
+        .attr('x1',lx).attr('x2',lx).attr('y1',y0+1).attr('y2',y1-1)
+        .attr('stroke',col).attr('stroke-opacity',.35)
+        .attr('stroke-width',2).attr('stroke-linecap','round');
+
+      // Substrand name as a horizontal label directly on the tinted band,
+      // placed at the TOP of the group so it reads naturally and never overlaps
+      // the concept name text (which is centered on each node's midpoint)
       const name=(side==='v1'?DATA.v1Sub[sub]:(DATA.v2Sub[sub]||{}).name)||'';
-      svg.append('text')
-        .attr('transform',`translate(${side==='v1'?lx+13:lx-13},${(y0+y1)/2}) rotate(${side==='v1'?-90:90})`)
-        .attr('text-anchor','middle').attr('font-size',8.5)
-        .attr('fill',col).attr('fill-opacity',.8)
-        .text(name.length>30?name.slice(0,29)+'…':name);
+      const labelX = side==='v1' ? x-5 : x+COLW+5;
+      const anchor  = side==='v1' ? 'end' : 'start';
+      // Only show if the group is tall enough that the top label won't collide with the first node's midpoint
+      const firstMid = pos[ns[0].code].y + pos[ns[0].code].h/2;
+      if(firstMid - y0 > 10){
+        svg.append('text')
+          .attr('x', labelX)
+          .attr('y', y0 - 3)
+          .attr('text-anchor', anchor)
+          .attr('dominant-baseline','auto')
+          .attr('font-size', 8)
+          .attr('font-weight', 600)
+          .attr('fill', col)
+          .attr('fill-opacity', .55)
+          .attr('letter-spacing','0.05em')
+          .text(name.toUpperCase().slice(0,32));
+      }
     });
   }
   brackets(leftNodes,L.pos,xL,'v1');
